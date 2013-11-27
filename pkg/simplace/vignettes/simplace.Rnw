@@ -1,0 +1,114 @@
+\documentclass{article}
+\usepackage[hyperfootnotes=false]{hyperref}
+\usepackage[left=2cm,top=2.3cm]{geometry}
+
+\newcommand{\simplace}{\textsc{Simplace}}
+% \VignetteIndexEntry{Simplace}
+
+\title{Interface to use \simplace{} from R}
+\author{Gunther Krauss}
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\maketitle
+
+\section{Introduction}
+This package provides methods to interact with the modelling framework \simplace \footnote{\textbf{S}cientific \textbf{I}mpact assessment and \textbf{M}odelling
+\textbf{PL}atform for \textbf{A}dvanced \textbf{C}rop and \textbf{E}cosystem management - \href{http://www.simplace.net}{www.simplace.net}}. \simplace{} is written in Java (and some parts in Scala) so one can access it from R via \texttt{rJava}. The purpose of this package is to simplify the interaction between R and \simplace, by providing functions to:
+\begin{itemize}
+\item initialize and configure \simplace
+\item load a simulation (solution and project)
+\item parameterize the simulation
+\item run whole simulation or run it stepwise
+\item get simulation output and convert it to formats suitable for R
+\end{itemize}
+
+
+
+
+\section{Installing the \simplace{} Framework}
+For installing \simplace, please consult the webpage \href{http://www.simplace.net}{www.simplace.net}.
+A brief guide to install \simplace:
+\begin{itemize}
+ \item If you don't have installed Java, please install an appropriate version of the (JRE or JDK) from \href{http://java.com}{java.com}
+ \item Download the console mode of \simplace{} from \href{http://www.simplace.net/Joomla/index.php/download}{www.simplace.net}
+ \item Unpack the zip archive to your disk. You have to unpack the whole directory \texttt{SIMPLACE} and the directory must not be renamed.
+ \item Install the \texttt{simplace} package in R: \\
+  \texttt{install.packages('simplace',repos='http://r-forge.r-project.org')}
+\end{itemize}
+
+
+
+
+\section{Basic Usage}
+The usage of \simplace{} in R follows roughly this scheme:
+\begin{itemize}
+ \item init \simplace{} by providing the path to your simplace installation directory, your working directory and your outputs
+ \item open a \simplace{} project form a solution (and project) file
+ \item create a list of simulation parameters you want to change
+ \item create and run a Simulation
+ \item get the result from the simulation
+ \item convert the result to a R object (\texttt{data.frame}, \texttt{list} etc.)
+\end{itemize}
+
+
+%
+%\section{Example}
+%\subsection{Run the simulation}
+%\begin{footnotesize}
+%<<>>=
+%library(simplace)
+%
+%SimplaceInstallationDir <- "D:/java/simplace/"
+%SimplaceWorkDir <- paste(SimplaceInstallationDir,"simplacerun/simulation/",sep="")
+%SimplaceOutputDir <-  paste(SimplaceInstallationDir,"simplacerun/output/",sep="")
+%Solution <- paste(SimplaceWorkDir,"gk/solution/complete/Complete.sol.xml",sep="")
+%
+%simplace <- initSimplace(SimplaceInstallationDir,SimplaceWorkDir,SimplaceOutputDir)
+%
+%openProject(simplace, Solution)
+%
+%parameter <- list()
+%parameter$enddate <- "31-12-1992"
+%
+%createSimulation(simplace,parameter)
+%runSimulations(simplace)
+%
+%simulationlist <-getSimulationIDs(simplace)
+%
+%result <- getResult(simplace,"DIAGRAM_OUT", simulationlist[[1]]);
+%
+%closeProject(simplace)
+%@
+%\end{footnotesize}
+%\subsection{Get the result and plot it}
+%
+%\begin{footnotesize}
+%<<fig=TRUE>>=
+%resf <- resultToDataframe(result)
+%
+%dates <- 300:730
+%weights <- resf[dates,
+%                c("TOP_LINE_Roots","TOP_LINE_Leaves","TOP_LINE_Stems","TOP_LINE_StorageOrgans")]
+%matplot(dates,weights,type="l",xlab="Days",ylab="Weight [g/m2]",main="Simulated Biomass")
+%legend(300,800,legend=c("Roots","Leaves","Stems","Storage Organs"),lty=1:4,col=1:4)
+%@
+%\end{footnotesize}
+%
+%
+%\subsection{Get arrays and plot them as contour plot}
+%\begin{footnotesize}
+%<<fig=TRUE>>=
+%resultlistexp <- resultToList(result,expand=TRUE)
+%water <- resultlistexp$BOTTOM_ARRAY_VolumetricWaterContent
+%wmat <- do.call(rbind,water)
+%wmatpart <- wmat[dates,]
+%filled.contour(dates,1:dim(wmatpart)[2],wmatpart,
+%               xlab="Day", ylab="Layer", main="Water content in soil")
+%@
+%\end{footnotesize}
+%\newpage
+%
+%\tableofcontents
+
+\end{document}

@@ -29,8 +29,8 @@
 \dontrun{
 simplace <- initSimplace(SimplaceInstallationDir,SimplaceWorkDir,SimplaceOutputDir)
 openProject(simplace, Solution)
-varmap1_22 <- stepSimulation(simplace,count=22)
-simple_varmap23_40 <- stepSimulation(simplace,filter=c("CURRENT.DATE","LintulBiomass.sWSO"),count=18)
+vm <- stepSimulation(simplace,count=22)
+vm_s <- stepSimulation(simplace,filter=c("CURRENT.DATE","LintulBiomass.sWSO"),count=18)
 closeProject(simplace)   }
 }
 
