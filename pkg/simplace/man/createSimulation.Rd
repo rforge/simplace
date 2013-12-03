@@ -1,6 +1,6 @@
 \name{createSimulation}
 \alias{createSimulation}
-\title{Creates a simulation from the solution and sets some parameters}
+\title{Creates a simulation from the solution and changes some parameters}
 \usage{
   createSimulation(simplace, parameterList = NULL,
     queue = TRUE)
@@ -16,12 +16,16 @@
   project to run them in parallel}
 }
 \value{
-  handle to the simulation
+  id of the created simulation
 }
 \description{
   Creates a simulation from the opened project and
   substitutes the values of the parameters given in the
-  parameter list. Simulation can be enqueued, so that they
-  run in parallel.
+  parameter list. Simulation will be put into the queue by
+  default.
+}
+\seealso{
+  \code{\link{runSimulations}},
+  \code{\link{resetSimulationQueue}}
 }
 

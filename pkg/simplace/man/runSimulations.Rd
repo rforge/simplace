@@ -1,6 +1,6 @@
 \name{runSimulations}
 \alias{runSimulations}
-\title{Run the simulations}
+\title{Run the created simulations}
 \usage{
   runSimulations(simplace, updateresources = FALSE,
     selectsimulation = FALSE)
@@ -15,6 +15,28 @@
   simulation}
 }
 \description{
-  Run the created simulations.
+  Run the created simulations from the queue. If the queue
+  is empty, the last created simulation will be run.
+}
+\examples{
+\dontrun{
+simplace <- initSimplace(SimplaceInstallationDir,SimplaceWorkDir,SimplaceOutputDir)
+openProject(simplace, Solution)
+parameters <- list()
+parameters$vLUE <- 3.0
+s1 <- createSimulation(simplace, parameters,queue=TRUE)
+parameters$vLUE <- 3.2
+s2 <- createSimulation(simplace, parameters,queue=TRUE)
+runSimulations(simplace)
+...
+parameters$vLUE <- 2,8
+s3 <- createSimulation(simplace, parameters,queue=TRUE)
+runSimulations(simplace)
+...
+closeProject(simplace)   }
+}
+\seealso{
+  \code{\link{createSimulation}},
+  \code{\link{resetSimulationQueue}}
 }
 

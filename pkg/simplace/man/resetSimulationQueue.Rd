@@ -1,0 +1,18 @@
+\name{resetSimulationQueue}
+\alias{resetSimulationQueue}
+\title{Clears the list of simulations}
+\usage{
+  resetSimulationQueue(simplace)
+}
+\arguments{
+  \item{simplace}{handle to the SimplaceWrapper object
+  returned by \code{\link{initSimplace}}}
+}
+\description{
+  Simulation list is cleared
+}
+\seealso{
+  \code{\link{createSimulation}},
+  \code{\link{runSimulations}}
+}
+

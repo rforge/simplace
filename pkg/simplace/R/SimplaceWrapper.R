@@ -111,36 +111,83 @@ closeProject <- function (simplace)
 }
 
 
-#' Creates a simulation from the solution and sets some parameters
+#' Creates a simulation from the solution and changes some parameters
 #' 
 #' Creates a simulation from the opened project and substitutes
 #' the values of the parameters given in the parameter list. 
-#' Simulation can be enqueued, so that they run in parallel.
+#' Simulation will be put into the queue by default.
 #' 
 #' @param simplace handle to the SimplaceWrapper object returned by \code{\link{initSimplace}}
 #' @param parameterList a list with the parameter name as key and parametervalue as value
 #' @param queue if true put simulation to the prepared project to run them in parallel 
-#' @return handle to the simulation
+#' @return id of the created simulation
 #' @export
+#' @seealso \code{\link{runSimulations}}, \code{\link{resetSimulationQueue}}
 createSimulation <- function (simplace,parameterList=NULL, queue=TRUE) {
   paramObject <- parameterListToStringArray(parameterList)
-  .jcall(simplace,"Lnet/simplace/simulation/FWSimSimulation;","createSimulation",paramObject,queue)
+  id <- .jcall(simplace,"Lnet/simplace/simulation/FWSimSimulation;","createSimulation",paramObject,queue)
+  .jcall(id,"S","getID")
 }
 
 
-#' Run the simulations
+#' Run the created simulations
 #' 
-#' Run the created simulations. 
+#' Run the created simulations from the queue. If the queue is empty, the
+#' last created simulation will be run.
 #' 
 #' @param simplace handle to the SimplaceWrapper object returned by \code{\link{initSimplace}}
 #' @param updateresources if true update ressources
 #' @param selectsimulation if true keeps a selected simulation
 #' @export
+#' @seealso \code{\link{createSimulation}}, \code{\link{resetSimulationQueue}}
+#' @examples
+#' \dontrun{
+#' simplace <- initSimplace(SimplaceInstallationDir,SimplaceWorkDir,SimplaceOutputDir)
+#' openProject(simplace, Solution)
+#' parameters <- list()
+#' parameters$vLUE <- 3.0
+#' s1 <- createSimulation(simplace, parameters,queue=TRUE)
+#' parameters$vLUE <- 3.2
+#' s2 <- createSimulation(simplace, parameters,queue=TRUE)
+#' runSimulations(simplace)
+#' ...
+#' parameters$vLUE <- 2,8
+#' s3 <- createSimulation(simplace, parameters,queue=TRUE)
+#' runSimulations(simplace)
+#' ...
+#' closeProject(simplace)   }
 runSimulations <- function(simplace, updateresources=FALSE,selectsimulation=FALSE)
 {
   .jcall(simplace, "V", "runSimulations", updateresources, selectsimulation )
 }
 
+#' Clears the list of simulations
+#' 
+#' Simulation list is cleared
+#' 
+#' @param simplace handle to the SimplaceWrapper object returned by \code{\link{initSimplace}}
+#' @export
+#' @seealso \code{\link{createSimulation}}, \code{\link{runSimulations}}
+resetSimulationQueue <- function (simplace) {
+  .jcall(simplace,"V","resetSimulationQueue")
+}
+
+#' Runs the opende project
+#' 
+#' Runs the simulation(s) as defined in the solution and project files.
+#' 
+#' @param simplace handle to the SimplaceWrapper object returned by \code{\link{initSimplace}}
+#' @export
+#' @examples
+#' \dontrun{
+#' simplace <- initSimplace(SimplaceInstallationDir,SimplaceWorkDir,SimplaceOutputDir)
+#' openProject(simplace, Solution, Project)
+#' runProject(simplace)
+#' ...
+#' closeProject(simplace)   }
+runProject <- function(simplace) {
+  .jcall(simplace,"V","run")
+}
 
 #' Runs a simulation stepwise
 #' 
@@ -160,7 +207,6 @@ runSimulations <- function(simplace, updateresources=FALSE,selectsimulation=FALS
 #' vm <- stepSimulation(simplace,count=22)
 #' vm_s <- stepSimulation(simplace,filter=c("CURRENT.DATE","LintulBiomass.sWSO"),count=18)
 #' closeProject(simplace)   }
-
 #' 
 stepSimulation <- function (simplace, count=1,filter=NULL)
 {
