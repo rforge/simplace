@@ -10,8 +10,8 @@
 \tabular{ll}{
 Package: \tab simplace\cr
 Type: \tab Package\cr
-Version: \tab 0.2\cr
-Date: \tab 2013-11-28\cr
+Version: \tab 0.4\cr
+Date: \tab 2013-12-05\cr
 License: \tab GPL-2\cr
 }
 Package needs a Java Runtime Environment as well as an installation of SIMPLACE. See \href{http://www.simplace.net/}{www.simplace.net} for more information about SIMPLACE.
@@ -27,9 +27,11 @@ Maintainer: Gunther Krauss <guntherkrauss@uni-bonn.de>
 \examples{
 \dontrun{
 SimplaceInstallationDir <- "D:/java/simplace/"
-SimplaceWorkDir <- paste(SimplaceInstallationDir,"simplacerun/simulation/",sep="")
-SimplaceOutputDir <-  paste(SimplaceInstallationDir,"simplacerun/output/",sep="")
-Solution <- paste(SimplaceWorkDir,"gk/solution/complete/Complete.sol.xml",sep="")
+
+SimplaceWorkDir <- "D:/java/simplace/simplacerun/simulation/"
+SimplaceOutputDir <-  "D:/java/simplace/simplacerun/output/"
+
+Solution <- "D:/java/simplace/simplacerun/simulation/gk/solution/complete/Complete.sol.xml"
 
 simplace <- initSimplace(SimplaceInstallationDir,SimplaceWorkDir,SimplaceOutputDir)
 
@@ -38,12 +40,10 @@ openProject(simplace, Solution)
 parameter <- list()
 parameter$vTempLimit <- 32
 
-createSimulation(simplace,parameter)
+simid <- createSimulation(simplace,parameter)
 runSimulations(simplace)
 
-simulationlist <-getSimulationIDs(simplace)
-
-result <- getResult(simplace,"DIAGRAM_OUT", simulationlist[[1]]);
+result <- getResult(simplace,"DIAGRAM_OUT", simid);
 
 closeProject(simplace)
 
