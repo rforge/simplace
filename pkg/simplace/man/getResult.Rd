@@ -8,7 +8,8 @@
   \item{simplace}{handle to the SimplaceWrapper object
   returned by \code{\link{initSimplace}}}
 
-  \item{outputId}{id of the output}
+  \item{outputId}{id of the output. Only MEMORY outputs are
+  accessible.}
 
   \item{simulationId}{id of the simulation}
 }
@@ -20,6 +21,8 @@
   The output is a JavaObject containing the variable names,
   data types, units and the values. Output can be converted
   with \code{\link{resultToList}} or
-  \code{\link{resultToDataframe}} to R objects.
+  \code{\link{resultToDataframe}} to R objects. Only MEMORY
+  outputs are accessible. For CSV or database outputs you
+  have to read the data by generic methods.
 }
 

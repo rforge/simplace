@@ -172,9 +172,11 @@ resetSimulationQueue <- function (simplace) {
   .jcall(simplace,"V","resetSimulationQueue")
 }
 
-#' Runs the opende project
+#' Runs the opened project
 #' 
-#' Runs the simulation(s) as defined in the solution and project files.
+#' Runs the simulation(s) as defined in the solution and project files. 
+#' There is no accessible MEMORY output, but one can load the CSV or 
+#' database output.
 #' 
 #' @param simplace handle to the SimplaceWrapper object returned by \code{\link{initSimplace}}
 #' @export
@@ -236,10 +238,11 @@ getSimulationIDs <- function(simplace)
 #' The output is a JavaObject containing the variable names, 
 #' data types, units and the values. Output can be converted
 #' with \code{\link{resultToList}} or \code{\link{resultToDataframe}}
-#' to R objects.
+#' to R objects. Only MEMORY outputs are accessible. For CSV or 
+#' database outputs you have to read the data by generic methods.
 #' 
 #' @param simplace handle to the SimplaceWrapper object returned by \code{\link{initSimplace}}
-#' @param outputId id of the output
+#' @param outputId id of the output. Only MEMORY outputs are accessible.
 #' @param simulationId id of the simulation
 #' @return handle to the data container which has to be processed afterwards
 #' @export
@@ -257,6 +260,7 @@ getResult <- function(simplace, outputId, simulationId)
 #'
 #' @param parameterList list of n parameter values indexed by parameter name
 #' @return a java object of type Object[n][2]
+#' @keywords internal
 parameterListToStringArray <- function (parameterList) 
 {
   if(!is.null(parameterList) && length(parameterList)>0)
@@ -384,6 +388,8 @@ resultToList <-function(result,expand=FALSE,from=NULL,to=NULL) {
       data[[i]] <- .jevalArray(data[[i]],simplify=TRUE,rawJNIRefSignature="[Ljava/lang/Integer;")
     else if(types[i]=="CHAR")
       data[[i]] <- .jevalArray(data[[i]],simplify=TRUE,rawJNIRefSignature="[Ljava/lang/String;")
+    else if(types[i]=="BOOLEAN")
+      data[[i]] <- .jevalArray(data[[i]],simplify=TRUE,rawJNIRefSignature="[Ljava/lang/Boolean;")
   }
   names(data)<-headerarray
   data
@@ -442,6 +448,8 @@ resultToDataframe <- function(result,from=NULL,to=NULL) {
       data[[i]] <- .jevalArray(data[[i]],simplify=TRUE,rawJNIRefSignature="[Ljava/lang/Integer;")
     else if(types[i]=="CHAR")
       data[[i]] <- .jevalArray(data[[i]],simplify=TRUE,rawJNIRefSignature="[Ljava/lang/String;")
+    else if(types[i]=="BOOLEAN")
+      data[[i]] <- .jevalArray(data[[i]],simplify=TRUE,rawJNIRefSignature="[Ljava/lang/Boolean;")
   }
   names(data)<-headerarray
   do.call(cbind.data.frame,data)

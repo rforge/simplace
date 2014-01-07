@@ -1,6 +1,6 @@
 \name{runProject}
 \alias{runProject}
-\title{Runs the opende project}
+\title{Runs the opened project}
 \usage{
   runProject(simplace)
 }
@@ -10,7 +10,8 @@
 }
 \description{
   Runs the simulation(s) as defined in the solution and
-  project files.
+  project files. There is no accessible MEMORY output, but
+  one can load the CSV or database output.
 }
 \examples{
 \dontrun{

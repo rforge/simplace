@@ -1,0 +1,25 @@
+Version 0.5
+
+* Updated documentation
+* Bugfix: Parsing Boolean values from the result
+
+
+Version 0.4
+
+* Updated vignette
+
+
+Version 0.3
+
+* Updated documentation
+* Returns the id of the created simulation
+
+
+Version 0.2
+
+* Version submitted initially to R-Forge
+
+
+Version 0.1
+
+* Just a proof of concept
