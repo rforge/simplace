@@ -67,6 +67,8 @@ initSimplace <- function(InstallationDir,WorkDir,OutputDir)
     "LAPCLIENT/lib/ant-launcher.jar",
     "LAPCLIENT/lib/jtds.jar",
     "LAPCLIENT/lib/postgresql.jar",
+    "SIMPLACE/lib/org.eclipse.mylyn.wikitext.core_2.0.0.20140108-1934.jar",
+    "SIMPLACE/lib/org.eclipse.mylyn.wikitext.tracwiki.core_2.0.0.20131126-1957.jar",
     "SIMPLACE/res/files"
   )
   sapply(classpaths, function(s) .jaddClassPath(paste(InstallationDir,s,sep="")))  
@@ -93,7 +95,7 @@ initSimplace <- function(InstallationDir,WorkDir,OutputDir)
 #' @export
 openProject <- function (simplace, solution, project=nullString)
 {
-  .jcall(simplace, "V", "prepareProject", project, solution)
+  .jcall(simplace, "V", "prepareSession", project, solution)
 }
 
 
