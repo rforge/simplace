@@ -2,7 +2,7 @@
 \alias{stepSimulation}
 \title{Run simulation step}
 \usage{
-  stepSimulation(simplace, count = 1, filter = NULL)
+stepSimulation(simplace, count = 1, filter = NULL)
 }
 \arguments{
   \item{simplace}{handle to the SimplaceWrapper object
@@ -14,16 +14,16 @@
   \item{count}{number of steps to be performed}
 }
 \value{
-  handle to the data container which has to be processed
-  afterwards
+handle to the data container which has to be processed
+afterwards
 }
 \description{
-  Runs a simulation stepwise
+Runs a simulation stepwise
 }
 \details{
-  Performs \code{count} steps of the simulation and returns
-  the values from the actual variable map. Can be called
-  consecutively.
+Performs \code{count} steps of the simulation and returns
+the values from the actual variable map. Can be called
+consecutively.
 }
 \examples{
 \dontrun{

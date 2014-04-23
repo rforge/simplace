@@ -2,8 +2,7 @@
 \alias{runSimulations}
 \title{Run the created simulations}
 \usage{
-  runSimulations(simplace, updateresources = FALSE,
-    selectsimulation = FALSE)
+runSimulations(simplace, updateresources = FALSE, selectsimulation = FALSE)
 }
 \arguments{
   \item{simplace}{handle to the SimplaceWrapper object
@@ -15,8 +14,8 @@
   simulation}
 }
 \description{
-  Run the created simulations from the queue. If the queue
-  is empty, the last created simulation will be run.
+Run the created simulations from the queue. If the queue is
+empty, the last created simulation will be run.
 }
 \examples{
 \dontrun{
@@ -36,7 +35,7 @@ runSimulations(simplace)
 closeProject(simplace)   }
 }
 \seealso{
-  \code{\link{createSimulation}},
-  \code{\link{resetSimulationQueue}}
+\code{\link{createSimulation}},
+\code{\link{resetSimulationQueue}}
 }
 

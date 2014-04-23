@@ -2,7 +2,7 @@
 \alias{openProject}
 \title{Open Project}
 \usage{
-  openProject(simplace, solution, project = nullString)
+openProject(simplace, solution, project = nullString)
 }
 \arguments{
   \item{simplace}{handle to the SimplaceWrapper object
@@ -14,13 +14,13 @@
   omitted to run solution only}
 }
 \description{
-  Initializes a simplace project (solution and projectfile)
+Initializes a simplace project (solution and projectfile)
 }
 \details{
-  Initializes a project. The absolute path to a solution
-  file is mandatory. Project file is optional.
+Initializes a project. The absolute path to a solution file
+is mandatory. Project file is optional.
 }
 \seealso{
-  \code{\link{closeProject}}
+\code{\link{closeProject}}
 }
 

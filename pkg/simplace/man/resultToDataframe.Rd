@@ -2,7 +2,7 @@
 \alias{resultToDataframe}
 \title{Convert result to dataframe}
 \usage{
-  resultToDataframe(result, from = NULL, to = NULL)
+resultToDataframe(result, from = NULL, to = NULL)
 }
 \arguments{
   \item{result}{handle to the data container returned by
@@ -15,15 +15,15 @@
   set, full result is returned}
 }
 \value{
-  data.frame with scalar output columns
+data.frame with scalar output columns
 }
 \description{
-  Converts the simulation output to a dataframe ignogring
-  array values
+Converts the simulation output to a dataframe ignogring
+array values
 }
 \details{
-  All scalar output columns are transformed to appropriate
-  R objects and then glued together in a dataframe
+All scalar output columns are transformed to appropriate R
+objects and then glued together in a dataframe
 }
 \examples{
 \dontrun{
@@ -40,7 +40,7 @@ resultframe <- resultToDataframe(result)
 resultframe[3,]}
 }
 \seealso{
-  \code{\link{resultToList}} returns the output columns as
-  list
+\code{\link{resultToList}} returns the output columns as
+list
 }
 

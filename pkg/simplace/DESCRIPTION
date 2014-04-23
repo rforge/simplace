@@ -1,8 +1,8 @@
 Package: simplace
 Type: Package
 Title: Interface to use the modelling framework SIMPLACE
-Version: 0.6
-Date: 2014-02-28
+Version: 0.7
+Date: 2014-04-23
 Author: Gunther Krauss
 Maintainer: Gunther Krauss <guntherkrauss@uni-bonn.de>
 Description: Interface to interact with the modelling framework SIMPLACE and to
@@ -11,6 +11,4 @@ License: GPL-2
 SystemRequirements: Java (>= 5.0)
 Depends:
     rJava (>= 0.9-4)
-Collate:
-    'SimplaceWrapper.R'
 LazyLoad: yes

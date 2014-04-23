@@ -2,19 +2,19 @@
 \alias{closeProject}
 \title{Close Project}
 \usage{
-  closeProject(simplace)
+closeProject(simplace)
 }
 \arguments{
   \item{simplace}{handle to the SimplaceWrapper object
   returned by \code{\link{initSimplace}}}
 }
 \description{
-  Finalizes the project
+Finalizes the project
 }
 \details{
-  Call to the finalize method of the simulation.
+Call to the finalize method of the simulation.
 }
 \seealso{
-  \code{\link{openProject}}
+\code{\link{openProject}}
 }
 

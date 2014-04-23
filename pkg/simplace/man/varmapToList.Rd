@@ -2,7 +2,7 @@
 \alias{varmapToList}
 \title{Convert varmap to list}
 \usage{
-  varmapToList(varmap, expand = TRUE)
+varmapToList(varmap, expand = TRUE)
 }
 \arguments{
   \item{varmap}{the varMap returned by
@@ -12,16 +12,16 @@
   vector.}
 }
 \value{
-  list with parameter name as key and parameter value as
-  value
+list with parameter name as key and parameter value as
+value
 }
 \description{
-  Converts the varmap to a list
+Converts the varmap to a list
 }
 \details{
-  Converts the varMap to a list. All elements are converted
-  to appropriate R objects. Arrays are expanded to vectors
-  by default.
+Converts the varMap to a list. All elements are converted
+to appropriate R objects. Arrays are expanded to vectors by
+default.
 }
 \examples{
 \dontrun{

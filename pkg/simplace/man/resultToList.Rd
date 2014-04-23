@@ -2,8 +2,7 @@
 \alias{resultToList}
 \title{Convert result to list}
 \usage{
-  resultToList(result, expand = FALSE, from = NULL,
-    to = NULL)
+resultToList(result, expand = FALSE, from = NULL, to = NULL)
 }
 \arguments{
   \item{result}{handle to the data container returned by
@@ -19,16 +18,16 @@
   set, full result is returned}
 }
 \value{
-  list with output columns
+list with output columns
 }
 \description{
-  Converts the simulation output to a list. Arrays are not
-  expanded by default
+Converts the simulation output to a list. Arrays are not
+expanded by default
 }
 \details{
-  Converts all scalar columns to appropriate R lists.
-  Columns containing arrays are left unchanged, unless
-  expand is TRUE.
+Converts all scalar columns to appropriate R lists. Columns
+containing arrays are left unchanged, unless expand is
+TRUE.
 }
 \examples{
 \dontrun{
@@ -45,7 +44,7 @@ resultlist <- resultToList(result)
 resullist$CURRENT.DATE}
 }
 \seealso{
-  \code{\link{resultToDataframe}} returns the scalar output
-  columns as \code{\link{data.frame}}
+\code{\link{resultToDataframe}} returns the scalar output
+columns as \code{\link{data.frame}}
 }
 
