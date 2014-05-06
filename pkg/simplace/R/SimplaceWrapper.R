@@ -95,7 +95,7 @@ initSimplace <- function(InstallationDir,WorkDir,OutputDir)
 #' @export
 openProject <- function (simplace, solution, project=nullString)
 {
-  .jcall(simplace, "V", "prepareSession", project, solution)
+  .jcall(simplace, "Lnet/simplace/simulation/FWSimSession;", "prepareSession", project, solution)
 }
 
 
