@@ -121,13 +121,13 @@ closeProject <- function (simplace)
 #' 
 #' @param simplace handle to the SimplaceWrapper object returned by \code{\link{initSimplace}}
 #' @param parameterList a list with the parameter name as key and parametervalue as value
-#' @param queue if true put simulation to the prepared project to run them in parallel 
+#' @param queue DEPRECATED  
 #' @return id of the created simulation
 #' @export
 #' @seealso \code{\link{runSimulations}}, \code{\link{resetSimulationQueue}}
 createSimulation <- function (simplace,parameterList=NULL, queue=TRUE) {
   paramObject <- parameterListToStringArray(parameterList)
-  id <- .jcall(simplace,"Lnet/simplace/simulation/FWSimSimulation;","createSimulation",paramObject,queue)
+  id <- .jcall(simplace,"Lnet/simplace/simulation/FWSimSimulation;","createSimulation",paramObject)
   .jcall(id,"S","getID")
 }
 

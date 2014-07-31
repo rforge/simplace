@@ -10,7 +10,7 @@ createSimulation(simplace, parameterList = NULL, queue = TRUE)
 
 \item{parameterList}{a list with the parameter name as key and parametervalue as value}
 
-\item{queue}{if true put simulation to the prepared project to run them in parallel}
+\item{queue}{DEPRECATED}
 }
 \value{
 id of the created simulation
