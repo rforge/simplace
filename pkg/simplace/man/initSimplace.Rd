@@ -3,7 +3,8 @@
 \alias{initSimplace}
 \title{Initialisation of Framework}
 \usage{
-initSimplace(InstallationDir, WorkDir, OutputDir)
+initSimplace(InstallationDir, WorkDir, OutputDir, additionalClasspaths = c(),
+  javaparameters = getOption("java.parameters"))
 }
 \arguments{
 \item{InstallationDir}{directory where simplace, lap and simplacerun are located}
@@ -11,6 +12,10 @@ initSimplace(InstallationDir, WorkDir, OutputDir)
 \item{WorkDir}{working directory where solutions, projects and data resides (_WORKDIR_)}
 
 \item{OutputDir}{directory for output (_OUTPUTDIR_)}
+
+\item{additionalClasspaths}{vector with class paths relative to InstallationDir that are to be added}
+
+\item{javaparameters}{parameters that are passed to the java virtual machine}
 }
 \value{
 handle to the SimplaceWrapper object

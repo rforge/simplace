@@ -12,7 +12,7 @@
 nullObject <- .jnull(class="java/lang/Object") # java null object
 nullString <- .jnull(class="java/lang/String") # java null string
 dateAttributes <- attributes(as.POSIXct("2000-01-01")) # attribute to apply to date field/vector
-
+delayedAssign("epochday", .jfield("java/time/temporal/ChronoField","Ljava/time/temporal/ChronoField;","EPOCH_DAY"))
 
 #' Initialisation of Framework
 #' 
@@ -22,12 +22,14 @@ dateAttributes <- attributes(as.POSIXct("2000-01-01")) # attribute to apply to d
 #' @param InstallationDir directory where simplace, lap and simplacerun are located
 #' @param WorkDir working directory where solutions, projects and data resides (_WORKDIR_)
 #' @param OutputDir directory for output (_OUTPUTDIR_)
+#' @param additionalClasspaths vector with class paths relative to InstallationDir that are to be added
+#' @param javaparameters parameters that are passed to the java virtual machine
 #' @return handle to the SimplaceWrapper object
 #' @export
-initSimplace <- function(InstallationDir,WorkDir,OutputDir)
+initSimplace <- function(InstallationDir,WorkDir,OutputDir,additionalClasspaths = c(),javaparameters = getOption("java.parameters"))
 {
   
-  .jinit() # inits java
+  .jinit(parameters=javaparameters) # inits java
   
   # add the classpaths  
   classpaths = c(
@@ -69,7 +71,11 @@ initSimplace <- function(InstallationDir,WorkDir,OutputDir)
     "LAPCLIENT/lib/postgresql.jar",
     "SIMPLACE/lib/org.eclipse.mylyn.wikitext.core_2.0.0.20140108-1934.jar",
     "SIMPLACE/lib/org.eclipse.mylyn.wikitext.tracwiki.core_2.0.0.20131126-1957.jar",
-    "SIMPLACE/res/files"
+    "SIMPLACE/lib/commons-jexl-2.1.1.jar",
+    "SIMPLACE/res/files",
+    
+    "SIMPLACE/lib/geotools/commons-logging-1.1.1.jar",
+    additionalClasspaths
   )
   sapply(classpaths, function(s) .jaddClassPath(paste(InstallationDir,s,sep="")))  
   
@@ -121,12 +127,16 @@ closeProject <- function (simplace)
 #' 
 #' @param simplace handle to the SimplaceWrapper object returned by \code{\link{initSimplace}}
 #' @param parameterList a list with the parameter name as key and parametervalue as value
-#' @param queue DEPRECATED  
+#' @param queue boolean - simulation is added to queue if true, else start new queue 
 #' @return id of the created simulation
 #' @export
 #' @seealso \code{\link{runSimulations}}, \code{\link{resetSimulationQueue}}
 createSimulation <- function (simplace,parameterList=NULL, queue=TRUE) {
   paramObject <- parameterListToStringArray(parameterList)
+  if(queue)
+  {
+    .jcall(simplace,"V","resetSimulationQueue") 
+  }
   id <- .jcall(simplace,"Lnet/simplace/simulation/FWSimSimulation;","createSimulation",paramObject)
   .jcall(id,"S","getID")
 }
@@ -284,6 +294,14 @@ parameterListToStringArray <- function (parameterList)
   }
 }
 
+#' Converts a java LocalDateTime object to epoch seconds
+#'
+#' @param a java LocalDateTime object
+#' @return a epoch seconds since 1970
+#' @keywords internal
+fromLocalTimeToEpochSeconds <- function(date){
+  .jcall(date,"J","getLong",.jcast(epochday,"java/time/temporal/TemporalField"))*86400
+}
 
 #' Converts the varmap to a list
 #' 
@@ -326,7 +344,7 @@ varmapToList <- function(varmap,expand=TRUE)
       }  
       else if (types[i]=="DATE")
       {
-        data[[i]] <- .jcall(data[[i]],"J","getTime")/1000
+        data[[i]] <- fromLocalTimeToEpochSeconds(data[[i]])
         attributes(data[[i]]) <- dateAttributes
       }  
       else
@@ -381,7 +399,7 @@ resultToList <-function(result,expand=FALSE,from=NULL,to=NULL) {
     }  
     else if (types[i]=="DATE")
     {
-      data[[i]] <- sapply(unlist(.jevalArray(data[[i]])),function(o){.jsimplify(o)/1000})
+      data[[i]] <- sapply(unlist(.jevalArray(data[[i]])),fromLocalTimeToEpochSeconds)
       attributes(data[[i]]) <- dateAttributes
     }  
     else if(types[i]=="DOUBLE")
@@ -441,7 +459,7 @@ resultToDataframe <- function(result,from=NULL,to=NULL) {
       data[[i]] <- NA
     else if (types[i]=="DATE")
     {
-      data[[i]] <- sapply(unlist(.jevalArray(data[[i]])),function(o){.jsimplify(o)/1000})
+      data[[i]] <- sapply(unlist(.jevalArray(data[[i]])),fromLocalTimeToEpochSeconds)
       attributes(data[[i]]) <- dateAttributes
     }  
     else if(types[i]=="DOUBLE")
@@ -455,4 +473,44 @@ resultToDataframe <- function(result,from=NULL,to=NULL) {
   }
   names(data)<-headerarray
   do.call(cbind.data.frame,data)
+}
+
+############# Additional functions ################
+
+#' Sets the log level of simplace
+#' 
+#' Sets the level of logger output - FATAL is least verbose,
+#' TRACE most verbose. You have to call \code{\link{initSimplace}} first.
+#' 
+#' @param level is a string with possible values: FATAL, ERROR, WARN, INFO, DEBUG, TRACE
+#' @export
+#' @examples 
+#' \dontrun{
+#' setLogLevel("INFO")}
+
+setLogLevel <- function(level)
+{
+  lg <- .jnew("net/simplace/simulation/io/logging/Logger")
+  lgl <- switch(level,
+    FATAL = lg$LOGLEVEL$FATAL,
+    ERROR = lg$LOGLEVEL$ERROR,
+    WARN = lg$LOGLEVEL$WARN,
+    INFO = lg$LOGLEVEL$INFO,
+    DEBUG = lg$LOGLEVEL$DEBUG,
+    TRACE = lg$LOGLEVEL$TRACE,
+    lg$LOGLEVEL$INFO
+    )
+  .jcall("net/simplace/simulation/io/logging/Logger","V","setLogLevel",lgl)
+}
+
+
+#' Sets the number of processors that are used parallel
+#' 
+#' The function can be used only after \code{\link{initSimplace}} has been
+#' called.
+#'
+#' @param count number of processors
+#' @export
+setSlotCount <- function(count) {
+  .jcall("net/simplace/simulation/FWSimEngine","V","setSlotCount",as.integer(count))
 }

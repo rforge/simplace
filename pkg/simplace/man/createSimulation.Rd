@@ -10,7 +10,7 @@ createSimulation(simplace, parameterList = NULL, queue = TRUE)
 
 \item{parameterList}{a list with the parameter name as key and parametervalue as value}
 
-\item{queue}{DEPRECATED}
+\item{queue}{boolean - simulation is added to queue if true, else start new queue}
 }
 \value{
 id of the created simulation
