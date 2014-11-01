@@ -1,4 +1,4 @@
-Version 0.9
+Version 0.90
 * Compatible with Simplace V3.0
 * initSimplace optionally accepts a list of additional claspaths
 * initSimplace optionalle accepts parameters that are passed to the java virtual machine

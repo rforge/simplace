@@ -10,7 +10,7 @@
 \tabular{ll}{
 Package: \tab simplace\cr
 Type: \tab Package\cr
-Version: \tab 0.9\cr
+Version: \tab 0.90\cr
 Date: \tab 2014-11-01\cr
 License: \tab GPL-2\cr
 }
