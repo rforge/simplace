@@ -9,10 +9,8 @@
 # Some helper definitions for calling/parsing
 
 
-nullObject <- .jnull(class="java/lang/Object") # java null object
-nullString <- .jnull(class="java/lang/String") # java null string
-dateAttributes <- attributes(as.POSIXct("2000-01-01")) # attribute to apply to date field/vector
-delayedAssign("epochday", .jfield("java/time/temporal/ChronoField","Ljava/time/temporal/ChronoField;","EPOCH_DAY"))
+nullObject <- rJava::.jnull(class="java/lang/Object") # java null object
+nullString <- rJava::.jnull(class="java/lang/String") # java null string
 
 #' Initialisation of Framework
 #' 
@@ -29,15 +27,15 @@ delayedAssign("epochday", .jfield("java/time/temporal/ChronoField","Ljava/time/t
 initSimplace <- function(InstallationDir,WorkDir,OutputDir,additionalClasspaths = c(),javaparameters = getOption("java.parameters"))
 {
   
-  .jinit(parameters=javaparameters) # inits java
+  rJava::.jinit(parameters=javaparameters) # inits java
   
   # add the classpaths  
   classpaths = c(
     "simplace/build/classes",
     "simplace/conf",
     "lap/build/classes",
-    "simplacerun/build/classes",
-    "simplacerun/conf",
+    "simplaceRUN/build/classes",
+    "simplaceRUN/conf",
     "simplace/lib/simplace.jar",
     "simplace/lib/simplace_run.jar",
     "simplace/lib/simplace-lap.jar",
@@ -77,10 +75,10 @@ initSimplace <- function(InstallationDir,WorkDir,OutputDir,additionalClasspaths 
     "simplace/lib/geotools/commons-logging-1.1.1.jar",
     additionalClasspaths
   )
-  sapply(classpaths, function(s) .jaddClassPath(paste(InstallationDir,s,sep="")))  
+  sapply(classpaths, function(s) rJava::.jaddClassPath(paste(InstallationDir,s,sep="")))  
   
   # create and return an instance of RSimplaceWrapper class
-  .jnew("net/simplace/simulation/wrapper/SimplaceWrapper", WorkDir, OutputDir)
+  rJava::.jnew("net/simplace/simulation/wrapper/SimplaceWrapper", WorkDir, OutputDir)
 }
 
 
@@ -101,7 +99,7 @@ initSimplace <- function(InstallationDir,WorkDir,OutputDir,additionalClasspaths 
 #' @export
 openProject <- function (simplace, solution, project=nullString)
 {
-  .jcall(simplace, "Lnet/simplace/simulation/FWSimSession;", "prepareSession", project, solution)
+  rJava::.jcall(simplace, "Lnet/simplace/simulation/FWSimSession;", "prepareSession", project, solution)
 }
 
 
@@ -115,7 +113,7 @@ openProject <- function (simplace, solution, project=nullString)
 #' @export
 closeProject <- function (simplace)
 {
-  .jcall(simplace,"V","finalize")
+  rJava::.jcall(simplace,"V","finalize")
 }
 
 
@@ -135,10 +133,10 @@ createSimulation <- function (simplace,parameterList=NULL, queue=TRUE) {
   paramObject <- parameterListToStringArray(parameterList)
   if(queue)
   {
-    .jcall(simplace,"V","resetSimulationQueue") 
+    rJava::.jcall(simplace,"V","resetSimulationQueue") 
   }
-  id <- .jcall(simplace,"Lnet/simplace/simulation/FWSimSimulation;","createSimulation",paramObject)
-  .jcall(id,"S","getID")
+  id <- rJava::.jcall(simplace,"Lnet/simplace/simulation/FWSimSimulation;","createSimulation",paramObject)
+  rJava::.jcall(id,"S","getID")
 }
 
 
@@ -170,7 +168,7 @@ createSimulation <- function (simplace,parameterList=NULL, queue=TRUE) {
 #' closeProject(simplace)   }
 runSimulations <- function(simplace, updateresources=FALSE,selectsimulation=FALSE)
 {
-  .jcall(simplace, "V", "runSimulations", updateresources, selectsimulation )
+  rJava::.jcall(simplace, "V", "runSimulations", updateresources, selectsimulation )
 }
 
 #' Clears the list of simulations
@@ -181,7 +179,7 @@ runSimulations <- function(simplace, updateresources=FALSE,selectsimulation=FALS
 #' @export
 #' @seealso \code{\link{createSimulation}}, \code{\link{runSimulations}}
 resetSimulationQueue <- function (simplace) {
-  .jcall(simplace,"V","resetSimulationQueue")
+  rJava::.jcall(simplace,"V","resetSimulationQueue")
 }
 
 #' Runs the opened project
@@ -200,7 +198,7 @@ resetSimulationQueue <- function (simplace) {
 #' ...
 #' closeProject(simplace)   }
 runProject <- function(simplace) {
-  .jcall(simplace,"V","run")
+  rJava::.jcall(simplace,"V","run")
 }
 
 #' Runs a simulation stepwise
@@ -225,9 +223,9 @@ runProject <- function(simplace) {
 stepSimulation <- function (simplace, count=1,filter=NULL)
 {
   if(class(filter)=="character" && length(filter)>0)
-    .jcall(simplace, "Lnet/simplace/simulation/wrapper/SimplaceWrapper$DataContainer;", "step", filter, as.integer(count))
+    rJava::.jcall(simplace, "Lnet/simplace/simulation/wrapper/SimplaceWrapper$DataContainer;", "step", filter, as.integer(count))
   else
-    .jcall(simplace, "Lnet/simplace/simulation/wrapper/SimplaceWrapper$DataContainer;", "step", as.integer(count))
+    rJava::.jcall(simplace, "Lnet/simplace/simulation/wrapper/SimplaceWrapper$DataContainer;", "step", as.integer(count))
 }
 
 
@@ -241,7 +239,7 @@ stepSimulation <- function (simplace, count=1,filter=NULL)
 #' @export
 getSimulationIDs <- function(simplace)
 {
-  .jcall(simplace, "[S", "getSimulationIDs")
+  rJava::.jcall(simplace, "[S", "getSimulationIDs")
 }
 
 
@@ -260,7 +258,7 @@ getSimulationIDs <- function(simplace)
 #' @export
 getResult <- function(simplace, outputId, simulationId)
 {
-  .jcall(simplace,"Lnet/simplace/simulation/wrapper/SimplaceWrapper$DataContainer;","getResult",outputId, simulationId);
+  rJava::.jcall(simplace,"Lnet/simplace/simulation/wrapper/SimplaceWrapper$DataContainer;","getResult",outputId, simulationId);
 }
 
 
@@ -284,24 +282,16 @@ parameterListToStringArray <- function (parameterList)
     {
       name <- names[[i]]   # key
       value <- toString(parameterList[[i]])   # value
-      objlist[i] <-.jarray(c(name, value))   # add array entry = {key, value}
+      objlist[i] <-rJava::.jarray(c(name, value))   # add array entry = {key, value}
     }
-    .jcast(.jarray(objlist),"[[Ljava/lang/Object;") # convert list to java array and cast it to Object[][]
+    rJava::.jcast(rJava::.jarray(objlist),"[[Ljava/lang/Object;") # convert list to java array and cast it to Object[][]
   }
   else
   {
-    .jcast(nullObject,"[[Ljava/lang/Object;")
+    rJava::.jcast(nullObject,"[[Ljava/lang/Object;")
   }
 }
 
-#' Converts a java LocalDateTime object to epoch seconds
-#'
-#' @param a java LocalDateTime object
-#' @return a epoch seconds since 1970
-#' @keywords internal
-fromLocalTimeToEpochSeconds <- function(date){
-  .jcall(date,"J","getLong",.jcast(epochday,"java/time/temporal/TemporalField"))*86400
-}
 
 #' Converts the varmap to a list
 #' 
@@ -327,10 +317,10 @@ fromLocalTimeToEpochSeconds <- function(date){
 
 varmapToList <- function(varmap,expand=TRUE)
 {
-  headerarray <- .jcall(varmap,"[S","getHeaderStrings")
-  types <- .jcall(varmap,"[S","getTypeStrings")
+  headerarray <- rJava::.jcall(varmap,"[S","getHeaderStrings")
+  types <- rJava::.jcall(varmap,"[S","getTypeStrings")
   #  units <- .jcall(varmapObj,"[S","getHeaderUnits")
-  data <- .jcall(varmap,"[Ljava/lang/Object;","getDataObjects")
+  data <- rJava::.jcall(varmap,"[Ljava/lang/Object;","getDataObjects")
   names(data) <- headerarray
   if(expand)
   {
@@ -340,15 +330,16 @@ varmapToList <- function(varmap,expand=TRUE)
         data[[i]] <- NA
       else if (types[i]=="DOUBLEARRAY" || types[i]=="INTARRAY")
       {
-        data[[i]] <-.jevalArray(data[[i]],simplify=TRUE)
+        data[[i]] <-rJava::.jevalArray(data[[i]],simplify=TRUE)
       }  
       else if (types[i]=="DATE")
       {
-        data[[i]] <- fromLocalTimeToEpochSeconds(data[[i]])
-        attributes(data[[i]]) <- dateAttributes
+        data[[i]] <- as.Date(sapply(rJava::.jevalArray(data[[i]]),function(x) rJava::.jcall(x,"S","toString")))
+        #data[[i]] <- fromLocalTimeToEpochSeconds(data[[i]])
+        #attributes(data[[i]]) <- dateAttributes
       }  
       else
-        data[[i]] <- .jsimplify(data[[i]])
+        data[[i]] <- rJava::.jsimplify(data[[i]])
       
     }
   }
@@ -382,34 +373,36 @@ varmapToList <- function(varmap,expand=TRUE)
 #' resultlist <- resultToList(result)
 #' resullist$CURRENT.DATE}
 resultToList <-function(result,expand=FALSE,from=NULL,to=NULL) {
-  headerarray <- .jcall(result,"[S","getHeaderStrings")
-  types <- .jcall(result,"[S","getTypeStrings")
+  headerarray <- rJava::.jcall(result,"[S","getHeaderStrings")
+  types <- rJava::.jcall(result,"[S","getTypeStrings")
   if(!is.null(from) && !is.null(to) && to>=from && from >=0)
-    data <- .jcall(result,"[Ljava/lang/Object;","getDataObjects",as.integer(from),as.integer(to))
+    data <- rJava::.jcall(result,"[Ljava/lang/Object;","getDataObjects",as.integer(from),as.integer(to))
   else
-    data <- .jcall(result,"[Ljava/lang/Object;","getDataObjects")
+    data <- rJava::.jcall(result,"[Ljava/lang/Object;","getDataObjects")
   for(i in (1:length(headerarray)))
   {
     if(types[i]=="NULL")
       data[[i]] <- NA
     else if (expand & (types[i]=="DOUBLEARRAY" | types[i]=="INTARRAY"))
     {
-      data[[i]] <-.jevalArray(data[[i]],simplify=TRUE)
-      data[[i]] <-lapply(data[[i]],function(a).jevalArray(a, simplify=TRUE))
+      data[[i]] <-rJava::.jevalArray(data[[i]],simplify=TRUE)
+      data[[i]] <-lapply(data[[i]],function(a)rJava::.jevalArray(a, simplify=TRUE))
     }  
     else if (types[i]=="DATE")
     {
-      data[[i]] <- sapply(unlist(.jevalArray(data[[i]])),fromLocalTimeToEpochSeconds)
-      attributes(data[[i]]) <- dateAttributes
+      data[[i]] <- as.Date(sapply(rJava::.jevalArray(data[[i]]),function(x) rJava::.jcall(x,"S","toString")))
+      
+#      data[[i]] <- sapply(unlist(.jevalArray(data[[i]])),fromLocalTimeToEpochSeconds)
+ #     attributes(data[[i]]) <- dateAttributes
     }  
     else if(types[i]=="DOUBLE")
-      data[[i]] <- .jevalArray(data[[i]],simplify=TRUE,rawJNIRefSignature="[Ljava/lang/Double;")
+      data[[i]] <- rJava::.jevalArray(data[[i]],simplify=TRUE,rawJNIRefSignature="[Ljava/lang/Double;")
     else if(types[i]=="INT")
-      data[[i]] <- .jevalArray(data[[i]],simplify=TRUE,rawJNIRefSignature="[Ljava/lang/Integer;")
+      data[[i]] <- rJava::.jevalArray(data[[i]],simplify=TRUE,rawJNIRefSignature="[Ljava/lang/Integer;")
     else if(types[i]=="CHAR")
-      data[[i]] <- .jevalArray(data[[i]],simplify=TRUE,rawJNIRefSignature="[Ljava/lang/String;")
+      data[[i]] <- rJava::.jevalArray(data[[i]],simplify=TRUE,rawJNIRefSignature="[Ljava/lang/String;")
     else if(types[i]=="BOOLEAN")
-      data[[i]] <- .jevalArray(data[[i]],simplify=TRUE,rawJNIRefSignature="[Ljava/lang/Boolean;")
+      data[[i]] <- rJava::.jevalArray(data[[i]],simplify=TRUE,rawJNIRefSignature="[Ljava/lang/Boolean;")
   }
   names(data)<-headerarray
   data
@@ -442,12 +435,12 @@ resultToList <-function(result,expand=FALSE,from=NULL,to=NULL) {
 #' resultframe <- resultToDataframe(result)
 #' resultframe[3,]}
 resultToDataframe <- function(result,from=NULL,to=NULL) {
-  oheaderarray <- .jcall(result,"[S","getHeaderStrings")
-  otypes <- .jcall(result,"[S","getTypeStrings")
+  oheaderarray <- rJava::.jcall(result,"[S","getHeaderStrings")
+  otypes <- rJava::.jcall(result,"[S","getTypeStrings")
   if(!is.null(from) && !is.null(to) && to>=from && from >=0)
-    odata <- .jcall(result,"[Ljava/lang/Object;","getDataObjects",as.integer(from),as.integer(to))
+    odata <- rJava::.jcall(result,"[Ljava/lang/Object;","getDataObjects",as.integer(from),as.integer(to))
   else
-    odata <- .jcall(result,"[Ljava/lang/Object;","getDataObjects")
+    odata <- rJava::.jcall(result,"[Ljava/lang/Object;","getDataObjects")
   
   index <- (otypes!="DOUBLEARRAY" & otypes!="INTARRAY")
   headerarray <- oheaderarray[index]
@@ -459,17 +452,18 @@ resultToDataframe <- function(result,from=NULL,to=NULL) {
       data[[i]] <- NA
     else if (types[i]=="DATE")
     {
-      data[[i]] <- sapply(unlist(.jevalArray(data[[i]])),fromLocalTimeToEpochSeconds)
-      attributes(data[[i]]) <- dateAttributes
+       data[[i]] <- as.Date(sapply(rJava::.jevalArray(data[[i]]),function(x) rJava::.jcall(x,"S","toString")))
+#      data[[i]] <- sapply(unlist(.jevalArray(data[[i]])),fromLocalTimeToEpochSeconds)
+#      attributes(data[[i]]) <- dateAttributes
     }  
     else if(types[i]=="DOUBLE")
-      data[[i]] <- .jevalArray(data[[i]],simplify=TRUE,rawJNIRefSignature="[Ljava/lang/Double;")
+      data[[i]] <- rJava::.jevalArray(data[[i]],simplify=TRUE,rawJNIRefSignature="[Ljava/lang/Double;")
     else if(types[i]=="INT")
-      data[[i]] <- .jevalArray(data[[i]],simplify=TRUE,rawJNIRefSignature="[Ljava/lang/Integer;")
+      data[[i]] <- rJava::.jevalArray(data[[i]],simplify=TRUE,rawJNIRefSignature="[Ljava/lang/Integer;")
     else if(types[i]=="CHAR")
-      data[[i]] <- .jevalArray(data[[i]],simplify=TRUE,rawJNIRefSignature="[Ljava/lang/String;")
+      data[[i]] <- rJava::.jevalArray(data[[i]],simplify=TRUE,rawJNIRefSignature="[Ljava/lang/String;")
     else if(types[i]=="BOOLEAN")
-      data[[i]] <- .jevalArray(data[[i]],simplify=TRUE,rawJNIRefSignature="[Ljava/lang/Boolean;")
+      data[[i]] <- rJava::.jevalArray(data[[i]],simplify=TRUE,rawJNIRefSignature="[Ljava/lang/Boolean;")
   }
   names(data)<-headerarray
   do.call(cbind.data.frame,data)
@@ -490,7 +484,7 @@ resultToDataframe <- function(result,from=NULL,to=NULL) {
 
 setLogLevel <- function(level)
 {
-  lg <- .jnew("net/simplace/simulation/io/logging/Logger")
+  lg <- rJava::.jnew("net/simplace/simulation/io/logging/Logger")
   lgl <- switch(level,
     FATAL = lg$LOGLEVEL$FATAL,
     ERROR = lg$LOGLEVEL$ERROR,
@@ -500,7 +494,7 @@ setLogLevel <- function(level)
     TRACE = lg$LOGLEVEL$TRACE,
     lg$LOGLEVEL$INFO
     )
-  .jcall("net/simplace/simulation/io/logging/Logger","V","setLogLevel",lgl)
+  rJava::.jcall("net/simplace/simulation/io/logging/Logger","V","setLogLevel",lgl)
 }
 
 
@@ -512,5 +506,5 @@ setLogLevel <- function(level)
 #' @param count number of processors
 #' @export
 setSlotCount <- function(count) {
-  .jcall("net/simplace/simulation/FWSimEngine","V","setSlotCount",as.integer(count))
+  rJava::.jcall("net/simplace/simulation/FWSimEngine","V","setSlotCount",as.integer(count))
 }

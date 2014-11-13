@@ -1,3 +1,6 @@
+Version 0.91
+* Refactoring & cleanup of code
+
 Version 0.90
 * Compatible with Simplace V3.0
 * initSimplace optionally accepts a list of additional claspaths
