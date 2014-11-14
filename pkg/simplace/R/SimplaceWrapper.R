@@ -3,14 +3,15 @@
 # Provides methods to run Solutions and Projects in Simplace 
 # and to retrieve and convert the data 
 # 
-#
+# @author Gunther Krauss
 ###############################################################################
+
 
 # Some helper definitions for calling/parsing
 
-
 nullObject <- rJava::.jnull(class="java/lang/Object") # java null object
 nullString <- rJava::.jnull(class="java/lang/String") # java null string
+
 
 #' Initialisation of Framework
 #' 
@@ -34,8 +35,8 @@ initSimplace <- function(InstallationDir,WorkDir,OutputDir,additionalClasspaths 
     "simplace/build/classes",
     "simplace/conf",
     "lap/build/classes",
-    "simplaceRUN/build/classes",
-    "simplaceRUN/conf",
+    "simplacerun/build/classes",
+    "simplacerun/conf",
     "simplace/lib/simplace.jar",
     "simplace/lib/simplace_run.jar",
     "simplace/lib/simplace-lap.jar",
@@ -171,6 +172,7 @@ runSimulations <- function(simplace, updateresources=FALSE,selectsimulation=FALS
   rJava::.jcall(simplace, "V", "runSimulations", updateresources, selectsimulation )
 }
 
+
 #' Clears the list of simulations
 #' 
 #' Simulation list is cleared
@@ -181,6 +183,7 @@ runSimulations <- function(simplace, updateresources=FALSE,selectsimulation=FALS
 resetSimulationQueue <- function (simplace) {
   rJava::.jcall(simplace,"V","resetSimulationQueue")
 }
+
 
 #' Runs the opened project
 #' 
@@ -200,6 +203,7 @@ resetSimulationQueue <- function (simplace) {
 runProject <- function(simplace) {
   rJava::.jcall(simplace,"V","run")
 }
+
 
 #' Runs a simulation stepwise
 #' 
@@ -314,7 +318,6 @@ parameterListToStringArray <- function (parameterList)
 #' 
 #' varlist$startdate - 24*3600
 #' varlist$LintulBiomass.sWSO}
-
 varmapToList <- function(varmap,expand=TRUE)
 {
   headerarray <- rJava::.jcall(varmap,"[S","getHeaderStrings")
@@ -335,8 +338,6 @@ varmapToList <- function(varmap,expand=TRUE)
       else if (types[i]=="DATE")
       {
         data[[i]] <- as.Date(sapply(rJava::.jevalArray(data[[i]]),function(x) rJava::.jcall(x,"S","toString")))
-        #data[[i]] <- fromLocalTimeToEpochSeconds(data[[i]])
-        #attributes(data[[i]]) <- dateAttributes
       }  
       else
         data[[i]] <- rJava::.jsimplify(data[[i]])
@@ -345,6 +346,7 @@ varmapToList <- function(varmap,expand=TRUE)
   }
   data
 }
+
 
 #' Converts the simulation output to a list. Arrays are not expanded by default
 #' 
@@ -391,9 +393,6 @@ resultToList <-function(result,expand=FALSE,from=NULL,to=NULL) {
     else if (types[i]=="DATE")
     {
       data[[i]] <- as.Date(sapply(rJava::.jevalArray(data[[i]]),function(x) rJava::.jcall(x,"S","toString")))
-      
-#      data[[i]] <- sapply(unlist(.jevalArray(data[[i]])),fromLocalTimeToEpochSeconds)
- #     attributes(data[[i]]) <- dateAttributes
     }  
     else if(types[i]=="DOUBLE")
       data[[i]] <- rJava::.jevalArray(data[[i]],simplify=TRUE,rawJNIRefSignature="[Ljava/lang/Double;")
@@ -453,8 +452,6 @@ resultToDataframe <- function(result,from=NULL,to=NULL) {
     else if (types[i]=="DATE")
     {
        data[[i]] <- as.Date(sapply(rJava::.jevalArray(data[[i]]),function(x) rJava::.jcall(x,"S","toString")))
-#      data[[i]] <- sapply(unlist(.jevalArray(data[[i]])),fromLocalTimeToEpochSeconds)
-#      attributes(data[[i]]) <- dateAttributes
     }  
     else if(types[i]=="DOUBLE")
       data[[i]] <- rJava::.jevalArray(data[[i]],simplify=TRUE,rawJNIRefSignature="[Ljava/lang/Double;")
@@ -469,7 +466,10 @@ resultToDataframe <- function(result,from=NULL,to=NULL) {
   do.call(cbind.data.frame,data)
 }
 
+
+
 ############# Additional functions ################
+
 
 #' Sets the log level of simplace
 #' 
@@ -481,7 +481,6 @@ resultToDataframe <- function(result,from=NULL,to=NULL) {
 #' @examples 
 #' \dontrun{
 #' setLogLevel("INFO")}
-
 setLogLevel <- function(level)
 {
   lg <- rJava::.jnew("net/simplace/simulation/io/logging/Logger")
