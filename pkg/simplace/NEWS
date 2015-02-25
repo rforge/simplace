@@ -1,3 +1,11 @@
+Version 0.93
+* Compatible with Simplace 3.1
+* Faster conversion of memory output to R objects 
+
+Version 0.92
+* Added additional jars to the classpath
+* Get vector with the units of the result columns
+
 Version 0.91
 * Refactoring & cleanup of code
 

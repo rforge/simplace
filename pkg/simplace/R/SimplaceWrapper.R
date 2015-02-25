@@ -74,6 +74,8 @@ initSimplace <- function(InstallationDir,WorkDir,OutputDir,additionalClasspaths 
     "simplace/res/files",
     
     "simplace/lib/geotools/commons-logging-1.1.1.jar",
+    "simplace/lib/jcifs-1.3.17.jar",
+    
     additionalClasspaths
   )
   sapply(classpaths, function(s) rJava::.jaddClassPath(paste(InstallationDir,s,sep="")))  
@@ -87,12 +89,11 @@ initSimplace <- function(InstallationDir,WorkDir,OutputDir,additionalClasspaths 
 ######################## Call Simplace Methods ######################
 
 
-#' Initializes a simplace project (solution and projectfile)
+#' Opens a Simplace project
 #' 
 #' Initializes a project. The absolute path to a solution file is mandatory. 
 #' Project file is optional.
 #' 
-#' @title Open Project
 #' @param simplace handle to the SimplaceWrapper object returned by \code{\link{initSimplace}}
 #' @param solution solution file with absolute path
 #' @param project project file with absolute path, can be omitted to run solution only
@@ -104,11 +105,10 @@ openProject <- function (simplace, solution, project=nullString)
 }
 
 
-#' Finalizes the project
+#' Close Project
 #' 
 #' Call to the finalize method of the simulation.
 #' 
-#' @title Close Project
 #' @param simplace handle to the SimplaceWrapper object returned by \code{\link{initSimplace}}
 #' @seealso \code{\link{openProject}}
 #' @export
@@ -118,7 +118,7 @@ closeProject <- function (simplace)
 }
 
 
-#' Creates a simulation from the solution and changes some parameters
+#' Creates a simulation and substitute parameters
 #' 
 #' Creates a simulation from the opened project and substitutes
 #' the values of the parameters given in the parameter list. 
@@ -205,12 +205,11 @@ runProject <- function(simplace) {
 }
 
 
-#' Runs a simulation stepwise
+#' Run simulation stepwise
 #' 
 #' Performs \code{count} steps of the simulation and returns the values from 
 #' the actual variable map. Can be called consecutively.
 #' 
-#' @title Run simulation step
 #' @param simplace handle to the SimplaceWrapper object returned by \code{\link{initSimplace}}
 #' @param filter vector of the variable names to be included in the result. If not set, all variables are returned
 #' @param count number of steps to be performed
@@ -233,7 +232,7 @@ stepSimulation <- function (simplace, count=1,filter=NULL)
 }
 
 
-#' List with the IDs of the performed simulations
+#' Lists IDs of the performed simulations
 #' 
 #' Returns a vector with the IDs of the simulations. IDs are required to
 #' get the output of the simulations.
@@ -302,7 +301,6 @@ parameterListToStringArray <- function (parameterList)
 #' Converts the varMap to a list. All elements are converted to appropriate
 #' R objects. Arrays are expanded to vectors by default.
 #' 
-#' @title Convert varmap to list
 #' @param varmap the varMap returned by \code{\link{stepSimulation}}
 #' @param expand if \code{TRUE} expand array objects to vector.
 #' @return list with parameter name as key and parameter value as value
@@ -337,7 +335,7 @@ varmapToList <- function(varmap,expand=TRUE)
       }  
       else if (types[i]=="DATE")
       {
-        data[[i]] <- as.Date(sapply(rJava::.jevalArray(data[[i]]),function(x) rJava::.jcall(x,"S","toString")))
+        data[[i]] <- as.Date(rJava::.jcall(data[[i]],"S","toString"))   
       }  
       else
         data[[i]] <- rJava::.jsimplify(data[[i]])
@@ -348,12 +346,11 @@ varmapToList <- function(varmap,expand=TRUE)
 }
 
 
-#' Converts the simulation output to a list. Arrays are not expanded by default
+#' Convert result to list
 #' 
-#' Converts all scalar columns to appropriate R lists. Columns containing
+#' Converts all scalar output columns to appropriate R lists. Columns containing
 #' arrays are left unchanged, unless expand is TRUE. 
 #' 
-#' @title Convert result to list
 #' @param result handle to the data container returned by \code{\link{getResult}}
 #' @param expand if true columns with arrays are partially expanded
 #' @param from start of the result range, if to/from are not set, full result is returned
@@ -385,15 +382,18 @@ resultToList <-function(result,expand=FALSE,from=NULL,to=NULL) {
   {
     if(types[i]=="NULL")
       data[[i]] <- NA
-    else if (expand & (types[i]=="DOUBLEARRAY" | types[i]=="INTARRAY"))
+    else if (expand & types[i]=="INTARRAY")
     {
-      data[[i]] <-rJava::.jevalArray(data[[i]],simplify=TRUE)
-      data[[i]] <-lapply(data[[i]],function(a)rJava::.jevalArray(a, simplify=TRUE))
+      data[[i]] <-rJava::.jevalArray(data[[i]],rawJNIRefSignature="[Ljava/lang/Integer;")
+      data[[i]] <-lapply(data[[i]],function(a)rJava::.jevalArray(a, simplify=TRUE,rawJNIRefSignature="[Ljava/lang/Integer;"))
+    }  
+    else if (expand & types[i]=="DOUBLEARRAY")
+    {
+      data[[i]] <-rJava::.jevalArray(data[[i]],rawJNIRefSignature="[Ljava/lang/Double;")
+      data[[i]] <-lapply(data[[i]],function(a)rJava::.jevalArray(a, simplify=TRUE,rawJNIRefSignature="[Ljava/lang/Double;"))
     }  
     else if (types[i]=="DATE")
-    {
-      data[[i]] <- as.Date(sapply(rJava::.jevalArray(data[[i]]),function(x) rJava::.jcall(x,"S","toString")))
-    }  
+      data[[i]] <- as.Date(rJava::.jevalArray(data[[i]],simplify=TRUE,rawJNIRefSignature="[Ljava/lang/String;")) 
     else if(types[i]=="DOUBLE")
       data[[i]] <- rJava::.jevalArray(data[[i]],simplify=TRUE,rawJNIRefSignature="[Ljava/lang/Double;")
     else if(types[i]=="INT")
@@ -408,12 +408,12 @@ resultToList <-function(result,expand=FALSE,from=NULL,to=NULL) {
 }
 
 
-#' Converts the simulation output to a dataframe ignogring array values
+#' Convert result to dataframe
 #' 
 #' All scalar output columns are transformed to appropriate R objects
-#' and then glued together in a dataframe
+#' and then glued together in a dataframe. Array outputs columns are ignored.
 #' 
-#' @title Convert result to dataframe
+#' 
 #' @param result handle to the data container returned by \code{\link{getResult}}
 #' @param from start of the result range, if to/from are not set, full result is returned
 #' @param to end of the result range, if to/from are not set, full result is returned
@@ -450,9 +450,7 @@ resultToDataframe <- function(result,from=NULL,to=NULL) {
     if(types[i]=="NULL")
       data[[i]] <- NA
     else if (types[i]=="DATE")
-    {
-       data[[i]] <- as.Date(sapply(rJava::.jevalArray(data[[i]]),function(x) rJava::.jcall(x,"S","toString")))
-    }  
+      data[[i]] <- as.Date(rJava::.jevalArray(data[[i]],simplify=TRUE,rawJNIRefSignature="[Ljava/lang/String;"))
     else if(types[i]=="DOUBLE")
       data[[i]] <- rJava::.jevalArray(data[[i]],simplify=TRUE,rawJNIRefSignature="[Ljava/lang/Double;")
     else if(types[i]=="INT")
@@ -467,6 +465,22 @@ resultToDataframe <- function(result,from=NULL,to=NULL) {
 }
 
 
+#' Get the units of the result variables
+#' 
+#' Get the units of each variable (i.e. data column) in a 
+#' human readable format.
+#' The output is a named character vector, where each element is named
+#' by the variables name.
+#' 
+#' @param result handle to the data container returned by \code{\link{getResult}}
+#' @return character vector with the units
+#' @export
+getUnitsOfResult <- function(result)
+{
+  units <- rJava::.jcall(result,"[S","getHeaderUnits")
+  names(units) <-  rJava::.jcall(result,"[S","getHeaderStrings")
+  units
+}
 
 ############# Additional functions ################
 
@@ -497,8 +511,9 @@ setLogLevel <- function(level)
 }
 
 
-#' Sets the number of processors that are used parallel
+#' Sets number of used CPUs
 #' 
+#' Sets the number of processors that are used parallel.
 #' The function can be used only after \code{\link{initSimplace}} has been
 #' called.
 #'
