@@ -1,3 +1,10 @@
+Version 0.95
+* Compatible with Simplace 3.2
+* removed parameter updateresources from function runSimulations
+
+Version 0.94
+* Added force.init option to initSimplace
+
 Version 0.93
 * Compatible with Simplace 3.1
 * Faster conversion of memory output to R objects 

@@ -23,12 +23,13 @@ nullString <- rJava::.jnull(class="java/lang/String") # java null string
 #' @param OutputDir directory for output (_OUTPUTDIR_)
 #' @param additionalClasspaths vector with class paths relative to InstallationDir that are to be added
 #' @param javaparameters parameters that are passed to the java virtual machine
+#' @param force.init (re)initialize a running JVM, see \code{\link{.jinit}}
 #' @return handle to the SimplaceWrapper object
 #' @export
-initSimplace <- function(InstallationDir,WorkDir,OutputDir,additionalClasspaths = c(),javaparameters = getOption("java.parameters"))
+initSimplace <- function(InstallationDir,WorkDir,OutputDir,additionalClasspaths = c(),javaparameters = getOption("java.parameters"), force.init=TRUE)
 {
   
-  rJava::.jinit(parameters=javaparameters) # inits java
+  rJava::.jinit(parameters=javaparameters, force.init) # inits java
   
   # add the classpaths  
   classpaths = c(
@@ -147,7 +148,6 @@ createSimulation <- function (simplace,parameterList=NULL, queue=TRUE) {
 #' last created simulation will be run.
 #' 
 #' @param simplace handle to the SimplaceWrapper object returned by \code{\link{initSimplace}}
-#' @param updateresources if true update ressources
 #' @param selectsimulation if true keeps a selected simulation
 #' @export
 #' @seealso \code{\link{createSimulation}}, \code{\link{resetSimulationQueue}}
@@ -167,9 +167,9 @@ createSimulation <- function (simplace,parameterList=NULL, queue=TRUE) {
 #' runSimulations(simplace)
 #' ...
 #' closeProject(simplace)   }
-runSimulations <- function(simplace, updateresources=FALSE,selectsimulation=FALSE)
+runSimulations <- function(simplace, selectsimulation=FALSE)
 {
-  rJava::.jcall(simplace, "V", "runSimulations", updateresources, selectsimulation )
+  rJava::.jcall(simplace, "V", "runSimulations", selectsimulation )
 }
 
 
@@ -219,6 +219,7 @@ runProject <- function(simplace) {
 #' \dontrun{
 #' simplace <- initSimplace(SimplaceInstallationDir,SimplaceWorkDir,SimplaceOutputDir)
 #' openProject(simplace, Solution)
+#' createSimulation(simplace)
 #' vm <- stepSimulation(simplace,count=22)
 #' vm_s <- stepSimulation(simplace,filter=c("CURRENT.DATE","LintulBiomass.sWSO"),count=18)
 #' closeProject(simplace)   }
