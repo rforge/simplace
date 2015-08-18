@@ -29,7 +29,7 @@ nullString <- rJava::.jnull(class="java/lang/String") # java null string
 initSimplace <- function(InstallationDir,WorkDir,OutputDir,additionalClasspaths = c(),javaparameters = getOption("java.parameters"), force.init=TRUE)
 {
   
-  rJava::.jinit(parameters=javaparameters, force.init) # inits java
+  rJava::.jinit(parameters=javaparameters, force.init=force.init) # inits java
   
   # add the classpaths  
   classpaths = c(
@@ -102,7 +102,7 @@ initSimplace <- function(InstallationDir,WorkDir,OutputDir,additionalClasspaths 
 #' @export
 openProject <- function (simplace, solution, project=nullString)
 {
-  rJava::.jcall(simplace, "Lnet/simplace/simulation/FWSimSession;", "prepareSession", project, solution)
+  rJava::.jcall(simplace, "Lnet/simplace/simulation/FWSimSession;", "prepareSession", project, solution);
 }
 
 
