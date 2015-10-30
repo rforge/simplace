@@ -7,11 +7,13 @@
 ###############################################################################
 
 
-# Some helper definitions for calling/parsing
+########## Some helper definitions for calling/parsing ############
 
 nullObject <- rJava::.jnull(class="java/lang/Object") # java null object
 nullString <- rJava::.jnull(class="java/lang/String") # java null string
 
+
+########## Initialisation ####################
 
 #' Initialisation of Framework
 #' 
@@ -108,14 +110,14 @@ openProject <- function (simplace, solution, project=nullString)
 
 #' Close Project
 #' 
-#' Call to the finalize method of the simulation.
+#' Call to the shutDown method of the simulation.
 #' 
 #' @param simplace handle to the SimplaceWrapper object returned by \code{\link{initSimplace}}
 #' @seealso \code{\link{openProject}}
 #' @export
 closeProject <- function (simplace)
 {
-  rJava::.jcall(simplace,"V","finalize")
+  rJava::.jcall(simplace,"V","shutDown")
 }
 
 
@@ -205,14 +207,39 @@ runProject <- function(simplace) {
 }
 
 
+#' Changes values of the current simulation
+#' 
+#' Sets values of arbitrary SimVariables in a simplace simulation.
+#' Useful if you want to couple simplace with another simulation 
+#' and interchange values daily.
+#' 
+#' @param simplace handle to the SimplaceWrapper object returned by \code{\link{initSimplace}}
+#' @param parameterList a list with the parameter name as key and parametervalue as value
+#' @export
+#' @examples
+#' \dontrun{
+#' for(i in 1:365)
+#' {
+#'   param <- list(iRain=0.0)
+#'   setSimulationValue(simplace,param)
+#'   step(simplace)
+#' }
+#' }
+#' 
+setSimulationValues <- function(simplace, parameterList=NULL) {
+  paramObject <- parameterListToStringArray(parameterList)
+  rJava::.jcall(simplace,"V","setSimulationValues",paramObject)
+}
+
 #' Run simulation stepwise
 #' 
 #' Performs \code{count} steps of the simulation and returns the values from 
 #' the actual variable map. Can be called consecutively.
 #' 
 #' @param simplace handle to the SimplaceWrapper object returned by \code{\link{initSimplace}}
-#' @param filter vector of the variable names to be included in the result. If not set, all variables are returned
 #' @param count number of steps to be performed
+#' @param filter vector of the variable names to be included in the result. If not set, all variables are returned
+#' @param parameterList list of parameter values indexed by parameter name
 #' @return handle to the data container which has to be processed afterwards
 #' @export
 #' @examples
@@ -224,12 +251,27 @@ runProject <- function(simplace) {
 #' vm_s <- stepSimulation(simplace,filter=c("CURRENT.DATE","LintulBiomass.sWSO"),count=18)
 #' closeProject(simplace)   }
 #' 
-stepSimulation <- function (simplace, count=1,filter=NULL)
+stepSimulation <- function (simplace, count=1, filter=NULL, parameterList=NULL)
 {
-  if(class(filter)=="character" && length(filter)>0)
-    rJava::.jcall(simplace, "Lnet/simplace/simulation/wrapper/SimplaceWrapper$DataContainer;", "step", filter, as.integer(count))
-  else
-    rJava::.jcall(simplace, "Lnet/simplace/simulation/wrapper/SimplaceWrapper$DataContainer;", "step", as.integer(count))
+  returntype = "Lnet/simplace/simulation/wrapper/SimplaceWrapper$DataContainer;"
+  withFilter = ("character" %in% class(filter) && length(filter)>0)
+  withParameter = ("list" %in% class(parameterList) && length(parameterList)>0)
+  if (withParameter) {
+    paramObject = parameterListToStringArray(parameterList)
+    if (withFilter) {
+      rJava::.jcall(simplace, returntype, "step", paramObject, filter, as.integer(count))
+    } else {
+      rJava::.jcall(simplace, returntype, "step", paramObject, as.integer(count))
+      
+    }
+  } else {
+    if (withFilter) {
+      rJava::.jcall(simplace, returntype, "step", filter, as.integer(count))
+    } else {
+      rJava::.jcall(simplace, returntype, "step", as.integer(count))
+    }
+    
+  }
 }
 
 
@@ -272,7 +314,7 @@ getResult <- function(simplace, outputId, simulationId)
 
 #' Converts a list of named parameters to a java string array
 #'
-#' @param parameterList list of n parameter values indexed by parameter name
+#' @param parameterList list of parameter values indexed by parameter name
 #' @return a java object of type Object[n][2]
 #' @keywords internal
 parameterListToStringArray <- function (parameterList) 
@@ -284,8 +326,12 @@ parameterListToStringArray <- function (parameterList)
     
     for(i in 1:length(parameterList))
     {
-      name <- names[[i]]   # key
-      value <- toString(parameterList[[i]])   # value
+      name <-  rJava::.jnew("java/lang/String",names[[i]])   # key
+      if(length(parameterList[[i]])==1) {
+        value <- rJava::.jnew("java/lang/String",toString(parameterList[[i]]))  
+      } else {
+        value <- rJava::.jarray(parameterList[[i]])
+      }  
       objlist[i] <-rJava::.jarray(c(name, value))   # add array entry = {key, value}
     }
     rJava::.jcast(rJava::.jarray(objlist),"[[Ljava/lang/Object;") # convert list to java array and cast it to Object[][]
@@ -484,7 +530,24 @@ getUnitsOfResult <- function(result)
 }
 
 ############# Additional functions ################
-
+#' Sets the lines of the project data files that should be used
+#' when running a project.
+#' 
+#' You have to call the function after \code{\link{initSimplace}}
+#' but before \code{\link{openProject}}.
+#' 
+#' @param simplace handle to the SimplaceWrapper object returned by \code{\link{initSimplace}}
+#' @param lines either a vector of integers or a string of numbers separated by commas
+#' @export
+#' @examples 
+#' \dontrun{
+#' setProjectLines(simplace, "1,3,6,9-17,33")
+#' setProjectLines(simplace, c(1,2,3,9:17,33))}
+setProjectLines <- function(simplace, lines)
+{
+    rJava::.jcall(simplace,"V","setProjectLines",as.character(Reduce(function(x,y) paste(x,y,sep=","),lines)))
+  
+}
 
 #' Sets the log level of simplace
 #' 
@@ -511,6 +574,22 @@ setLogLevel <- function(level)
   rJava::.jcall("net/simplace/simulation/io/logging/Logger","V","setLogLevel",lgl)
 }
 
+
+#' Sets the check level of simplace
+#' 
+#' Sets the check level. OFF does no check at all, STRICT the most severe.
+#' You have to call \code{\link{initSimplace}} first.
+#' 
+#' @param simplace handle to the SimplaceWrapper object returned by \code{\link{initSimplace}}
+#' @param level is a string with possible values: "CUSTOM,"STRICT","INTENSE","LAZY","OFF","ONLY"
+#' @export
+#' @examples 
+#' \dontrun{
+#' setCheckLevel(simplace, "STRICT")}
+setCheckLevel <- function(simplace, level)
+{
+  rJava::.jcall(simplace,"V","setCheckLevel",level)
+}
 
 #' Sets number of used CPUs
 #' 

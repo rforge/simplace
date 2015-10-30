@@ -10,7 +10,7 @@ closeProject(simplace)
 \item{simplace}{handle to the SimplaceWrapper object returned by \code{\link{initSimplace}}}
 }
 \description{
-Call to the finalize method of the simulation.
+Call to the shutDown method of the simulation.
 }
 \seealso{
 \code{\link{openProject}}

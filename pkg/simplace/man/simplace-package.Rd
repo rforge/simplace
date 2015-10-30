@@ -10,8 +10,8 @@
 \tabular{ll}{
 Package: \tab simplace\cr
 Type: \tab Package\cr
-Version: \tab 0.96\cr
-Date: \tab 2015-08-18\cr
+Version: \tab 0.98\cr
+Date: \tab 2015-10-30\cr
 License: \tab GPL-2\cr
 }
 Package needs a Java Runtime Environment as well as an installation of SIMPLACE. See \href{http://www.simplace.net/}{www.simplace.net} for more information about SIMPLACE.

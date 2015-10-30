@@ -4,7 +4,7 @@
 \alias{stepSimulation}
 \title{Run simulation stepwise}
 \usage{
-stepSimulation(simplace, count = 1, filter = NULL)
+stepSimulation(simplace, count = 1, filter = NULL, parameterList = NULL)
 }
 \arguments{
 \item{simplace}{handle to the SimplaceWrapper object returned by \code{\link{initSimplace}}}
@@ -12,6 +12,8 @@ stepSimulation(simplace, count = 1, filter = NULL)
 \item{count}{number of steps to be performed}
 
 \item{filter}{vector of the variable names to be included in the result. If not set, all variables are returned}
+
+\item{parameterList}{list of parameter values indexed by parameter name}
 }
 \value{
 handle to the data container which has to be processed afterwards
