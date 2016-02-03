@@ -6,6 +6,49 @@
 # @author Gunther Krauss
 ###############################################################################
 
+#' simplace: Interface to use the modelling framework SIMPLACE
+#' 
+#' Interface to interact with the modelling framework SIMPLACE and to
+#' parse the results of simulations
+#' 
+#' Package needs a Java Runtime Environment as well as an installation of SIMPLACE. 
+#' See \href{http://www.simplace.net/}{www.simplace.net} for more information about SIMPLACE.
+#' 
+#' @author {Gunther Krauss}
+#'   
+#' 
+#' @examples
+#'   \dontrun{
+#'     SimplaceInstallationDir <- "D:/java/simplace/"
+#'     
+#'     SimplaceWorkDir <- "D:/java/simplace/simplacerun/simulation/"
+#'     SimplaceOutputDir <-  "D:/java/simplace/simplacerun/output/"
+#'     
+#'     Solution <- "D:/java/simplace/simplacerun/simulation/gk/solution/complete/Complete.sol.xml"
+#'     
+#'     simplace <- initSimplace(SimplaceInstallationDir,SimplaceWorkDir,SimplaceOutputDir)
+#'     
+#'     openProject(simplace, Solution)
+#'     
+#'     parameter <- list()
+#'     parameter$vTempLimit <- 32
+#'     
+#'     simid <- createSimulation(simplace,parameter)
+#'     runSimulations(simplace)
+#'     
+#'     result <- getResult(simplace,"DIAGRAM_OUT", simid);
+#'     
+#'     closeProject(simplace)
+#'     
+#'     resultlist <- resultToList(result)
+#'     resultframe <- resultToDataframe(result)
+#'   }
+#' 
+#' @references \href{http://www.simplace.net/}{www.simplace.net}
+#'
+#' @docType package
+#' @name simplace
+NULL
 
 ########## Some helper definitions for calling/parsing ############
 
@@ -33,6 +76,12 @@ initSimplace <- function(InstallationDir,WorkDir,OutputDir,additionalClasspaths 
   
   rJava::.jinit(parameters=javaparameters, force.init=force.init) # inits java
   
+  
+  
+  libjars = paste0("simplace/lib/",
+                   dir(paste0(InstallationDir,"simplace/lib/"),
+                       recursive=TRUE, pattern="*.jar|*.JAR"))
+  
   # add the classpaths  
   classpaths = c(
     "simplace/build/classes",
@@ -40,45 +89,8 @@ initSimplace <- function(InstallationDir,WorkDir,OutputDir,additionalClasspaths 
     "lap/build/classes",
     "simplacerun/build/classes",
     "simplacerun/conf",
-    "simplace/lib/simplace.jar",
-    "simplace/lib/simplace_run.jar",
-    "simplace/lib/simplace-lap.jar",
-    "simplace/lib/schmitzm-core-2.7-SNAPSHOT.jar",
-    "simplace/lib/schmitzm-gt-2.7-SNAPSHOT.jar",
-    "simplace/lib/hsqldb-1.8.0.7.jar",
-    "simplace/lib/schmitzm/schmitzm-core-2.7-SNAPSHOT.jar",
-    "simplace/lib/schmitzm/schmitzm-gt-2.7-SNAPSHOT.jar",
-    "simplace/lib/geotools/hsqldb-1.8.0.7.jar",
-    "simplace/lib/commons-io-1.3.1.jar",
-    "simplace/lib/commons-lang-2.4.jar",
-    "simplace/lib/h2-1.1.117.jar",
-    "simplace/lib/javaws.jar",
-    "simplace/lib/jaxen-full.jar",
-    "simplace/lib/jdom.jar",
-    "simplace/lib/jfreechart-1.0.14.jar",
-    "simplace/lib/jcommon-1.0.17.jar",
-    "simplace/lib/jRegistryKey.jar",
-    "simplace/lib/log4j-1.2.15.jar",
-    "simplace/lib/oro.jar",
-    "simplace/lib/saxpath.jar",
-    "simplace/lib/xercesImpl-2.7.1.jar",
-    "simplace/lib/jena-2.6.4.jar",
-    "simplace/lib/iri-0.8.jar",
-    "simplace/lib/icu4j-3.4.4.jar",
-    "simplace/lib/slf4j-api-1.5.11.jar",
-    "simplace/lib/slf4j-log4j12-1.5.11.jar",
-    "lapclient/lib/ant.jar",
-    "lapclient/lib/ant-launcher.jar",
-    "lapclient/lib/jtds.jar",
-    "lapclient/lib/postgresql.jar",
-    "simplace/lib/org.eclipse.mylyn.wikitext.core_2.0.0.20140108-1934.jar",
-    "simplace/lib/org.eclipse.mylyn.wikitext.tracwiki.core_2.0.0.20131126-1957.jar",
-    "simplace/lib/commons-jexl-2.1.1.jar",
     "simplace/res/files",
-    
-    "simplace/lib/geotools/commons-logging-1.1.1.jar",
-    "simplace/lib/jcifs-1.3.17.jar",
-    
+    libjars,
     additionalClasspaths
   )
   sapply(classpaths, function(s) rJava::.jaddClassPath(paste(InstallationDir,s,sep="")))  

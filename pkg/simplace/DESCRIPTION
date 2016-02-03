@@ -1,8 +1,8 @@
 Package: simplace
 Type: Package
 Title: Interface to use the modelling framework SIMPLACE
-Version: 0.98
-Date: 2015-10-30
+Version: 0.99
+Date: 2016-02-03
 Author: Gunther Krauss
 Maintainer: Gunther Krauss <guntherkrauss@uni-bonn.de>
 Description: Interface to interact with the modelling framework SIMPLACE and to
@@ -13,4 +13,6 @@ Imports:
     rJava (>= 0.9-6)
 LazyLoad: yes
 VignetteBuilder: knitr
-Suggests: knitr
+Suggests:
+    knitr
+RoxygenNote: 5.0.1
