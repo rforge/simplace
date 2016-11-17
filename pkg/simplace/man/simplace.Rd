@@ -17,10 +17,10 @@ See \href{http://www.simplace.net/}{www.simplace.net} for more information about
   \dontrun{
     SimplaceInstallationDir <- "D:/java/simplace/"
     
-    SimplaceWorkDir <- "D:/java/simplace/simplacerun/simulation/"
-    SimplaceOutputDir <-  "D:/java/simplace/simplacerun/output/"
+    SimplaceWorkDir <- "D:/java/simplace/simplace_run/simulation/"
+    SimplaceOutputDir <-  "D:/java/simplace/simplace_run/output/"
     
-    Solution <- "D:/java/simplace/simplacerun/simulation/gk/solution/complete/Complete.sol.xml"
+    Solution <- "D:/java/simplace/simplace_run/simulation/gk/solution/complete/Complete.sol.xml"
     
     simplace <- initSimplace(SimplaceInstallationDir,SimplaceWorkDir,SimplaceOutputDir)
     

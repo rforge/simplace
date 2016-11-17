@@ -1,3 +1,7 @@
+Version 4.0
+* Compatible with Simplace 4.0
+* Same version number as Simplace version 
+
 Version 0.99
 * Adds automatically all jars from simplace/lib to classpath
 * Package documentation created automatically via roxygen2

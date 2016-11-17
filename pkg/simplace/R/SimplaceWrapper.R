@@ -21,10 +21,10 @@
 #'   \dontrun{
 #'     SimplaceInstallationDir <- "D:/java/simplace/"
 #'     
-#'     SimplaceWorkDir <- "D:/java/simplace/simplacerun/simulation/"
-#'     SimplaceOutputDir <-  "D:/java/simplace/simplacerun/output/"
+#'     SimplaceWorkDir <- "D:/java/simplace/simplace_run/simulation/"
+#'     SimplaceOutputDir <-  "D:/java/simplace/simplace_run/output/"
 #'     
-#'     Solution <- "D:/java/simplace/simplacerun/simulation/gk/solution/complete/Complete.sol.xml"
+#'     Solution <- "D:/java/simplace/simplace_run/simulation/gk/solution/complete/Complete.sol.xml"
 #'     
 #'     simplace <- initSimplace(SimplaceInstallationDir,SimplaceWorkDir,SimplaceOutputDir)
 #'     
@@ -63,7 +63,7 @@ nullString <- rJava::.jnull(class="java/lang/String") # java null string
 #' Initializes the JVM and creates the SimplaceWrapper object which 
 #' is used to interact with Simplace.
 #' 
-#' @param InstallationDir directory where simplace, lap and simplacerun are located
+#' @param InstallationDir directory where simplace_core, simplace_modules and simplace_run are located
 #' @param WorkDir working directory where solutions, projects and data resides (_WORKDIR_)
 #' @param OutputDir directory for output (_OUTPUTDIR_)
 #' @param additionalClasspaths vector with class paths relative to InstallationDir that are to be added
@@ -78,25 +78,25 @@ initSimplace <- function(InstallationDir,WorkDir,OutputDir,additionalClasspaths 
   
   
   
-  libjars = paste0("simplace/lib/",
-                   dir(paste0(InstallationDir,"simplace/lib/"),
+  libjars = paste0("simplace_core/lib/",
+                   dir(paste0(InstallationDir,"simplace_core/lib/"),
                        recursive=TRUE, pattern="*.jar|*.JAR"))
   
   # add the classpaths  
   classpaths = c(
-    "simplace/build/classes",
-    "simplace/conf",
-    "lap/build/classes",
-    "simplacerun/build/classes",
-    "simplacerun/conf",
-    "simplace/res/files",
+    "simplace_core/build/classes",
+    "simplace_core/conf",
+    "simplace_modules/build/classes",
+    "simplace_run/build/classes",
+    "simplace_run/conf",
+    "simplace_core/res/files",
     libjars,
     additionalClasspaths
   )
   sapply(classpaths, function(s) rJava::.jaddClassPath(paste(InstallationDir,s,sep="")))  
   
   # create and return an instance of RSimplaceWrapper class
-  rJava::.jnew("net/simplace/simulation/wrapper/SimplaceWrapper", WorkDir, OutputDir)
+  rJava::.jnew("net/simplace/sim/wrapper/SimplaceWrapper", WorkDir, OutputDir)
 }
 
 
@@ -116,7 +116,7 @@ initSimplace <- function(InstallationDir,WorkDir,OutputDir,additionalClasspaths 
 #' @export
 openProject <- function (simplace, solution, project=nullString)
 {
-  rJava::.jcall(simplace, "Lnet/simplace/simulation/FWSimSession;", "prepareSession", project, solution);
+  rJava::.jcall(simplace, "Lnet/simplace/sim/FWSimSession;", "prepareSession", project, solution);
 }
 
 
@@ -151,7 +151,7 @@ createSimulation <- function (simplace,parameterList=NULL, queue=TRUE) {
   {
     rJava::.jcall(simplace,"V","resetSimulationQueue") 
   }
-  id <- rJava::.jcall(simplace,"Lnet/simplace/simulation/FWSimSimulation;","createSimulation",paramObject)
+  id <- rJava::.jcall(simplace,"Lnet/simplace/sim/FWSimSimulation;","createSimulation",paramObject)
   rJava::.jcall(id,"S","getID")
 }
 
@@ -265,7 +265,7 @@ setSimulationValues <- function(simplace, parameterList=NULL) {
 #' 
 stepSimulation <- function (simplace, count=1, filter=NULL, parameterList=NULL)
 {
-  returntype = "Lnet/simplace/simulation/wrapper/SimplaceWrapper$DataContainer;"
+  returntype = "Lnet/simplace/sim/wrapper/DataContainer;"
   withFilter = ("character" %in% class(filter) && length(filter)>0)
   withParameter = ("list" %in% class(parameterList) && length(parameterList)>0)
   if (withParameter) {
@@ -316,7 +316,7 @@ getSimulationIDs <- function(simplace)
 #' @export
 getResult <- function(simplace, outputId, simulationId)
 {
-  rJava::.jcall(simplace,"Lnet/simplace/simulation/wrapper/SimplaceWrapper$DataContainer;","getResult",outputId, simulationId);
+  rJava::.jcall(simplace,"Lnet/simplace/sim/wrapper/DataContainer;","getResult",outputId, simulationId);
 }
 
 
@@ -336,6 +336,9 @@ parameterListToStringArray <- function (parameterList)
     objlist <- vector("list",length(parameterList));    # creates an empty list
     names <- names(parameterList)    # get the keys
     
+    wr <- getOption("warn") # turn off warnings as jarray gives a warning
+    options(warn = -1)
+    
     for(i in 1:length(parameterList))
     {
       name <-  rJava::.jnew("java/lang/String",names[[i]])   # key
@@ -346,6 +349,8 @@ parameterListToStringArray <- function (parameterList)
       }  
       objlist[i] <-rJava::.jarray(c(name, value))   # add array entry = {key, value}
     }
+    options(warn=wr)
+    
     rJava::.jcast(rJava::.jarray(objlist),"[[Ljava/lang/Object;") # convert list to java array and cast it to Object[][]
   }
   else
@@ -573,7 +578,7 @@ setProjectLines <- function(simplace, lines)
 #' setLogLevel("INFO")}
 setLogLevel <- function(level)
 {
-  lg <- rJava::.jnew("net/simplace/simulation/io/logging/Logger")
+  lg <- rJava::.jnew("net/simplace/core/logging/Logger")
   lgl <- switch(level,
     FATAL = lg$LOGLEVEL$FATAL,
     ERROR = lg$LOGLEVEL$ERROR,
@@ -583,7 +588,7 @@ setLogLevel <- function(level)
     TRACE = lg$LOGLEVEL$TRACE,
     lg$LOGLEVEL$INFO
     )
-  rJava::.jcall("net/simplace/simulation/io/logging/Logger","V","setLogLevel",lgl)
+  rJava::.jcall("net/simplace/core/logging/Logger","V","setLogLevel",lgl)
 }
 
 
@@ -612,5 +617,5 @@ setCheckLevel <- function(simplace, level)
 #' @param count number of processors
 #' @export
 setSlotCount <- function(count) {
-  rJava::.jcall("net/simplace/simulation/FWSimEngine","V","setSlotCount",as.integer(count))
+  rJava::.jcall("net/simplace/sim/FWSimEngine","V","setSlotCount",as.integer(count))
 }

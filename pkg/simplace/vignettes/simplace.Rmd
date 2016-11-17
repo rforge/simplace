@@ -71,8 +71,8 @@ The usage of <span style="font-variant:small-caps;">Simplace</span> in R follows
 ```{r running, results='hide', eval=FALSE}
 library(simplace)
 SimplaceInstallationDir <- "D:/Java/simplace/"
-SimplaceWorkDir <- paste(SimplaceInstallationDir,"simplacerun/simulation/",sep="")
-SimplaceOutputDir <-  paste(SimplaceInstallationDir,"simplacerun/output/",sep="")
+SimplaceWorkDir <- paste(SimplaceInstallationDir,"simplace_run/simulation/",sep="")
+SimplaceOutputDir <-  paste(SimplaceInstallationDir,"simplace_run/output/",sep="")
 
 Solution <- paste(SimplaceWorkDir,"gk/solution/complete/Complete.sol.xml",sep="")
 

@@ -8,7 +8,7 @@ initSimplace(InstallationDir, WorkDir, OutputDir, additionalClasspaths = c(),
   javaparameters = getOption("java.parameters"), force.init = TRUE)
 }
 \arguments{
-\item{InstallationDir}{directory where simplace, lap and simplacerun are located}
+\item{InstallationDir}{directory where simplace_core, simplace_modules and simplace_run are located}
 
 \item{WorkDir}{working directory where solutions, projects and data resides (_WORKDIR_)}
 
