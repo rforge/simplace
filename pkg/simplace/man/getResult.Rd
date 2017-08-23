@@ -23,4 +23,3 @@ with \code{\link{resultToList}} or \code{\link{resultToDataframe}}
 to R objects. Only MEMORY outputs are accessible. For CSV or 
 database outputs you have to read the data by generic methods.
 }
-

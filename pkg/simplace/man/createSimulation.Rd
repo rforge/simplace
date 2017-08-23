@@ -24,4 +24,3 @@ Simulation will be put into the queue by default.
 \seealso{
 \code{\link{runSimulations}}, \code{\link{resetSimulationQueue}}
 }
-

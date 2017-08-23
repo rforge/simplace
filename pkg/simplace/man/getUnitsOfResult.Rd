@@ -18,4 +18,3 @@ human readable format.
 The output is a named character vector, where each element is named
 by the variables name.
 }
-

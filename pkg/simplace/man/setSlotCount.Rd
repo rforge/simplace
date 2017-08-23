@@ -14,4 +14,3 @@ Sets the number of processors that are used parallel.
 The function can be used only after \code{\link{initSimplace}} has been
 called.
 }
-

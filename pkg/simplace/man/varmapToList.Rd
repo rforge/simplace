@@ -30,4 +30,3 @@ varlist <- varmapToList(varmap)
 varlist$startdate - 24*3600
 varlist$LintulBiomass.sWSO}
 }
-

@@ -27,4 +27,3 @@ handle to the SimplaceWrapper object
 Initializes the JVM and creates the SimplaceWrapper object which 
 is used to interact with Simplace.
 }
-

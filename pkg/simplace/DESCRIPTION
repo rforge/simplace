@@ -1,8 +1,8 @@
 Package: simplace
 Type: Package
 Title: Interface to use the modelling framework SIMPLACE
-Version: 4.0.0
-Date: 2016-11-17
+Version: 4.1.0
+Date: 2017-08-23
 Author: Gunther Krauss
 Maintainer: Gunther Krauss <guntherkrauss@uni-bonn.de>
 Description: Interface to interact with the modelling framework SIMPLACE and to
@@ -15,4 +15,4 @@ LazyLoad: yes
 VignetteBuilder: knitr
 Suggests:
     knitr
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

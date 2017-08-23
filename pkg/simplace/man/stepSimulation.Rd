@@ -32,4 +32,3 @@ vm_s <- stepSimulation(simplace,filter=c("CURRENT.DATE","LintulBiomass.sWSO"),co
 closeProject(simplace)   }
 
 }
-

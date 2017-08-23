@@ -21,4 +21,3 @@ but before \code{\link{openProject}}.
 setProjectLines(simplace, "1,3,6,9-17,33")
 setProjectLines(simplace, c(1,2,3,9:17,33))}
 }
-

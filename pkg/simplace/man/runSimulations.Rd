@@ -35,4 +35,3 @@ closeProject(simplace)   }
 \seealso{
 \code{\link{createSimulation}}, \code{\link{resetSimulationQueue}}
 }
-

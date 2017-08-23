@@ -22,4 +22,3 @@ runProject(simplace)
 ...
 closeProject(simplace)   }
 }
-

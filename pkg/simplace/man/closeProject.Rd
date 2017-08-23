@@ -15,4 +15,3 @@ Call to the shutDown method of the simulation.
 \seealso{
 \code{\link{openProject}}
 }
-

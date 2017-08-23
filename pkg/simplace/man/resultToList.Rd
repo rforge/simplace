@@ -39,4 +39,3 @@ resullist$CURRENT.DATE}
 \seealso{
 \code{\link{resultToDataframe}} returns the scalar output columns as \code{\link{data.frame}}
 }
-

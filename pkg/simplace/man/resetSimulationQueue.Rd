@@ -15,4 +15,3 @@ Simulation list is cleared
 \seealso{
 \code{\link{createSimulation}}, \code{\link{runSimulations}}
 }
-

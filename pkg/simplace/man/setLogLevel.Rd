@@ -17,4 +17,3 @@ TRACE most verbose. You have to call \code{\link{initSimplace}} first.
 \dontrun{
 setLogLevel("INFO")}
 }
-

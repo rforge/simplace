@@ -19,4 +19,3 @@ You have to call \code{\link{initSimplace}} first.
 \dontrun{
 setCheckLevel(simplace, "STRICT")}
 }
-

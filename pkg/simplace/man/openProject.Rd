@@ -20,4 +20,3 @@ Project file is optional.
 \seealso{
 \code{\link{closeProject}}
 }
-

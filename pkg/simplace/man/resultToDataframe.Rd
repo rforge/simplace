@@ -37,4 +37,3 @@ resultframe[3,]}
 \seealso{
 \code{\link{resultToList}} returns the output columns as list
 }
-

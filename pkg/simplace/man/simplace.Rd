@@ -41,10 +41,9 @@ See \href{http://www.simplace.net/}{www.simplace.net} for more information about
   }
 
 }
-\author{
-{Gunther Krauss}
-}
 \references{
 \href{http://www.simplace.net/}{www.simplace.net}
 }
-
+\author{
+{Gunther Krauss}
+}
