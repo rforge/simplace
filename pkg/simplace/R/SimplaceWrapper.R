@@ -66,12 +66,14 @@ nullString <- rJava::.jnull(class="java/lang/String") # java null string
 #' @param InstallationDir directory where simplace_core, simplace_modules and simplace_run are located
 #' @param WorkDir working directory where solutions, projects and data resides (_WORKDIR_)
 #' @param OutputDir directory for output (_OUTPUTDIR_)
+#' @param ProjectsDir optional directory for project data  (_PROJECTSDIR_)
+#' @param DataDir optional directory for data (_DATADIR_)
 #' @param additionalClasspaths vector with class paths relative to InstallationDir that are to be added
 #' @param javaparameters parameters that are passed to the java virtual machine
 #' @param force.init (re)initialize a running JVM, see \code{\link{.jinit}}
 #' @return handle to the SimplaceWrapper object
 #' @export
-initSimplace <- function(InstallationDir,WorkDir,OutputDir,additionalClasspaths = c(),javaparameters = getOption("java.parameters"), force.init=TRUE)
+initSimplace <- function(InstallationDir,WorkDir,OutputDir, ProjectsDir = nullString, DataDir = nullString, additionalClasspaths = c(),javaparameters = getOption("java.parameters"), force.init=TRUE)
 {
   
   rJava::.jinit(parameters=javaparameters, force.init=force.init) # inits java
@@ -96,7 +98,7 @@ initSimplace <- function(InstallationDir,WorkDir,OutputDir,additionalClasspaths 
   sapply(classpaths, function(s) rJava::.jaddClassPath(paste(InstallationDir,s,sep="")))  
   
   # create and return an instance of RSimplaceWrapper class
-  rJava::.jnew("net/simplace/sim/wrapper/SimplaceWrapper", WorkDir, OutputDir)
+  rJava::.jnew("net/simplace/sim/wrapper/SimplaceWrapper", WorkDir, OutputDir, ProjectsDir, DataDir)
 }
 
 
@@ -547,6 +549,39 @@ getUnitsOfResult <- function(result)
 }
 
 ############# Additional functions ################
+
+
+#' Set working-, output-, projects- and data-directory
+#' 
+#' One can specify all or only some of the directories. 
+#' Only the directories specified will be set. 
+#' 
+#' @param simplace handle to the SimplaceWrapper object returned by \code{\link{initSimplace}}
+#' @param WorkDir working directory where solutions, projects and data resides (_WORKDIR_)
+#' @param OutputDir directory for output (_OUTPUTDIR_)
+#' @param ProjectsDir optional directory for project data  (_PROJECTSDIR_)
+#' @param DataDir optional directory for data (_DATADIR_)
+#' @seealso \code{\link{getSimplaceDirectories}}
+#' @export
+setSimplaceDirectories <- function(simplace ,WorkDir = nullString, OutputDir = nullString, ProjectsDir = nullString, DataDir = nullString)
+{
+  rJava::.jcall(simplace,"V","setDirectories", WorkDir, OutputDir, ProjectsDir, DataDir)
+}
+  
+#' Get the directories (work-, output-, projects- and data-dir)
+#'
+#' @param simplace handle to the SimplaceWrapper object returned by \code{\link{initSimplace}}
+#' @return character vector with the directories
+#' @seealso \code{\link{setSimplaceDirectories}}
+#' @export
+getSimplaceDirectories <- function(simplace)
+{
+  res <- rJava::.jcall(simplace,"[S","getDirectories")
+  names(res)<-c('_WORKDIR_', '_OUTPUTDIR_', '_PROJECTSDIR_', '_DATADIR_')
+  res
+}
+
+
 #' Sets the lines of the project data files that should be used
 #' when running a project.
 #' 

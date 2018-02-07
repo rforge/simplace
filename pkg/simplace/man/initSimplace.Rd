@@ -4,7 +4,8 @@
 \alias{initSimplace}
 \title{Initialisation of Framework}
 \usage{
-initSimplace(InstallationDir, WorkDir, OutputDir, additionalClasspaths = c(),
+initSimplace(InstallationDir, WorkDir, OutputDir, ProjectsDir = nullString,
+  DataDir = nullString, additionalClasspaths = c(),
   javaparameters = getOption("java.parameters"), force.init = TRUE)
 }
 \arguments{
@@ -13,6 +14,10 @@ initSimplace(InstallationDir, WorkDir, OutputDir, additionalClasspaths = c(),
 \item{WorkDir}{working directory where solutions, projects and data resides (_WORKDIR_)}
 
 \item{OutputDir}{directory for output (_OUTPUTDIR_)}
+
+\item{ProjectsDir}{optional directory for project data  (_PROJECTSDIR_)}
+
+\item{DataDir}{optional directory for data (_DATADIR_)}
 
 \item{additionalClasspaths}{vector with class paths relative to InstallationDir that are to be added}
 
