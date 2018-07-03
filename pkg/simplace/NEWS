@@ -1,3 +1,6 @@
+Version 4.2.1
+* Bugfix: queue switch of createSimulation now works correct
+
 Version 4.2
 * Compatible with Simplace 4.2
 * Added methods to set (and get) directories used by simplace

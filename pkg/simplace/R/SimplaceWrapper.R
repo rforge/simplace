@@ -149,7 +149,7 @@ closeProject <- function (simplace)
 #' @seealso \code{\link{runSimulations}}, \code{\link{resetSimulationQueue}}
 createSimulation <- function (simplace,parameterList=NULL, queue=TRUE) {
   paramObject <- parameterListToStringArray(parameterList)
-  if(queue)
+  if(!queue)
   {
     rJava::.jcall(simplace,"V","resetSimulationQueue") 
   }
