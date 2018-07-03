@@ -1,3 +1,6 @@
+Version 4.2.2
+* createSimulation: set queue switch by default to FALSE
+
 Version 4.2.1
 * Bugfix: queue switch of createSimulation now works correct
 

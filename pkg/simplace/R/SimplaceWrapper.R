@@ -147,7 +147,7 @@ closeProject <- function (simplace)
 #' @return id of the created simulation
 #' @export
 #' @seealso \code{\link{runSimulations}}, \code{\link{resetSimulationQueue}}
-createSimulation <- function (simplace,parameterList=NULL, queue=TRUE) {
+createSimulation <- function (simplace,parameterList=NULL, queue=FALSE) {
   paramObject <- parameterListToStringArray(parameterList)
   if(!queue)
   {

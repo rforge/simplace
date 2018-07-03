@@ -4,7 +4,7 @@
 \alias{createSimulation}
 \title{Creates a simulation and substitute parameters}
 \usage{
-createSimulation(simplace, parameterList = NULL, queue = TRUE)
+createSimulation(simplace, parameterList = NULL, queue = FALSE)
 }
 \arguments{
 \item{simplace}{handle to the SimplaceWrapper object returned by \code{\link{initSimplace}}}

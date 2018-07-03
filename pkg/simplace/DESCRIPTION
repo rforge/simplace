@@ -1,7 +1,7 @@
 Package: simplace
 Type: Package
 Title: Interface to use the modelling framework SIMPLACE
-Version: 4.2.1
+Version: 4.2.2
 Date: 2018-07-03
 Author: Gunther Krauss
 Maintainer: Gunther Krauss <guntherkrauss@uni-bonn.de>
