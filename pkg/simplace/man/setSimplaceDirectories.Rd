@@ -5,7 +5,8 @@
 \title{Set working-, output-, projects- and data-directory}
 \usage{
 setSimplaceDirectories(simplace, WorkDir = nullString,
-  OutputDir = nullString, ProjectsDir = nullString, DataDir = nullString)
+  OutputDir = nullString, ProjectsDir = nullString,
+  DataDir = nullString)
 }
 \arguments{
 \item{simplace}{handle to the SimplaceWrapper object returned by \code{\link{initSimplace}}}

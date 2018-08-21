@@ -4,12 +4,15 @@
 \alias{setSimulationValues}
 \title{Changes values of the current simulation}
 \usage{
-setSimulationValues(simplace, parameterList = NULL)
+setSimulationValues(simplace, parameterList = NULL,
+  simulationNumber = 1)
 }
 \arguments{
 \item{simplace}{handle to the SimplaceWrapper object returned by \code{\link{initSimplace}}}
 
 \item{parameterList}{a list with the parameter name as key and parametervalue as value}
+
+\item{simulationNumber}{number of simulation in the queue whose parameters should be set (default first simulation)}
 }
 \description{
 Sets values of arbitrary SimVariables in a simplace simulation.

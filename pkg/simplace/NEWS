@@ -1,3 +1,7 @@
+Version 4.2.3
+* Possibilty to perform simulation step on all/specific queued simulations 
+* Data and ProjectDir defaults to WorkDir, not to simplace server
+
 Version 4.2.2
 * createSimulation: set queue switch by default to FALSE
 

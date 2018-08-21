@@ -4,8 +4,9 @@
 \alias{initSimplace}
 \title{Initialisation of Framework}
 \usage{
-initSimplace(InstallationDir, WorkDir, OutputDir, ProjectsDir = nullString,
-  DataDir = nullString, additionalClasspaths = c(),
+initSimplace(InstallationDir, WorkDir, OutputDir,
+  ProjectsDir = nullString, DataDir = nullString,
+  additionalClasspaths = c(),
   javaparameters = getOption("java.parameters"), force.init = TRUE)
 }
 \arguments{

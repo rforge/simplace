@@ -229,6 +229,7 @@ runProject <- function(simplace) {
 #' 
 #' @param simplace handle to the SimplaceWrapper object returned by \code{\link{initSimplace}}
 #' @param parameterList a list with the parameter name as key and parametervalue as value
+#' @param simulationNumber number of simulation in the queue whose parameters should be set (default first simulation)
 #' @export
 #' @examples
 #' \dontrun{
@@ -240,9 +241,35 @@ runProject <- function(simplace) {
 #' }
 #' }
 #' 
-setSimulationValues <- function(simplace, parameterList=NULL) {
+setSimulationValues <- function(simplace, parameterList=NULL, simulationNumber = 1) {
   paramObject <- parameterListToStringArray(parameterList)
-  rJava::.jcall(simplace,"V","setSimulationValues",paramObject)
+  rJava::.jcall(simplace,"V","setSimulationValues", as.integer(simulationNumber-1), paramObject)
+}
+
+#' Changes values of the all simulations in queue
+#' 
+#' Sets values of arbitrary SimVariables in a simplace simulation.
+#' Useful if you want to couple simplace with another simulation 
+#' and interchange values daily.
+#' 
+#' @param simplace handle to the SimplaceWrapper object returned by \code{\link{initSimplace}}
+#' @param parameterLists a list of parameter lists for each simulation 
+#' @export
+#' @examples
+#' \dontrun{
+#' for(i in 1:365)
+#' {
+#'   params <- list()
+#'   params[[1]] <- list(iRain=0.0)
+#'   params[[2]] <- list(iRain=2.0)
+#'   setAllSimulationValue(simplace,params)
+#'   stepAll(simplace)
+#' }
+#' }
+#' 
+setAllSimulationValues <- function(simplace, parameterLists=NULL) {
+  paramObject <- parameterListsToStringArray(parameterLists)
+  rJava::.jcall(simplace,"V","setAllSimulationValues",paramObject)
 }
 
 #' Run simulation stepwise
@@ -254,6 +281,7 @@ setSimulationValues <- function(simplace, parameterList=NULL) {
 #' @param count number of steps to be performed
 #' @param filter vector of the variable names to be included in the result. If not set, all variables are returned
 #' @param parameterList list of parameter values indexed by parameter name
+#' @param simulationNumber number of simulation in the queue that should be run stepwise (default first simulation)
 #' @return handle to the data container which has to be processed afterwards
 #' @export
 #' @examples
@@ -265,29 +293,78 @@ setSimulationValues <- function(simplace, parameterList=NULL) {
 #' vm_s <- stepSimulation(simplace,filter=c("CURRENT.DATE","LintulBiomass.sWSO"),count=18)
 #' closeProject(simplace)   }
 #' 
-stepSimulation <- function (simplace, count=1, filter=NULL, parameterList=NULL)
+stepSimulation <- function (simplace, count=1, filter=NULL, parameterList=NULL, simulationNumber = 1)
 {
   returntype = "Lnet/simplace/sim/wrapper/DataContainer;"
   withFilter = ("character" %in% class(filter) && length(filter)>0)
   withParameter = ("list" %in% class(parameterList) && length(parameterList)>0)
+  simnr = as.integer(simulationNumber-1)
+  cnt = as.integer(count)
   if (withParameter) {
     paramObject = parameterListToStringArray(parameterList)
     if (withFilter) {
-      rJava::.jcall(simplace, returntype, "step", paramObject, filter, as.integer(count))
+      rJava::.jcall(simplace, returntype, "stepSpecific", simnr, paramObject, filter, cnt)
     } else {
-      rJava::.jcall(simplace, returntype, "step", paramObject, as.integer(count))
+      rJava::.jcall(simplace, returntype, "stepSpecific", simnr, paramObject, cnt)
       
     }
   } else {
     if (withFilter) {
-      rJava::.jcall(simplace, returntype, "step", filter, as.integer(count))
+      rJava::.jcall(simplace, returntype, "stepSpecific", simnr, filter, cnt)
     } else {
-      rJava::.jcall(simplace, returntype, "step", as.integer(count))
+      rJava::.jcall(simplace, returntype, "stepSpecific", simnr, cnt)
     }
     
   }
 }
 
+
+
+#' Run all simulations in queue stepwise
+#' 
+#' Performs \code{count} steps of the simulation and returns the values from 
+#' the actual variable map. Can be called consecutively.
+#' 
+#' @param simplace handle to the SimplaceWrapper object returned by \code{\link{initSimplace}}
+#' @param count number of steps to be performed
+#' @param filter vector of the variable names to be included in the result. If not set, all variables are returned
+#' @param parameterLists a list of parameter lists for each simulation 
+#' @return handle to an array of data containers which has to be processed afterwards
+#' @export
+#' @examples
+#' \dontrun{
+#' simplace <- initSimplace(SimplaceInstallationDir,SimplaceWorkDir,SimplaceOutputDir)
+#' openProject(simplace, Solution)
+#' createSimulation(simplace)
+#' vm <- stepAllSimulation(simplace,count=22)
+#' vm_s <- stepAllSimulation(simplace,filter=c("CURRENT.DATE","LintulBiomass.sWSO"),count=18)
+#' closeProject(simplace)   }
+#' 
+stepAllSimulations <- function (simplace, count=1, filter=NULL, parameterLists=NULL)
+{
+  result <- NULL
+  returntype = "[Lnet/simplace/sim/wrapper/DataContainer;"
+  withFilter = ("character" %in% class(filter) && length(filter)>0)
+  withParameter = ("list" %in% class(parameterLists) && length(parameterLists)>0)
+  cnt = as.integer(count)
+  if (withParameter) {
+    paramObject <- parameterListsToStringArray(parameterLists)
+    if (withFilter) {
+      result <- rJava::.jcall(simplace, returntype, "stepAll", paramObject, filter, cnt)
+    } else {
+      result <- rJava::.jcall(simplace, returntype, "stepAll", paramObject, cnt)
+      
+    }
+  } else {
+    if (withFilter) {
+      result <- rJava::.jcall(simplace, returntype, "stepAll", filter, cnt)
+    } else {
+      result <- rJava::.jcall(simplace, returntype, "stepAll", cnt)
+    }
+    
+  }
+  result
+}
 
 #' Lists IDs of the performed simulations
 #' 
@@ -361,6 +438,30 @@ parameterListToStringArray <- function (parameterList)
   }
 }
 
+
+
+#' Converts a list of named parameters to a java string array
+#'
+#' @param parameterLists list of parameter list (values indexed by parameter name)
+#' @return a java object of type Object[k][n][2]
+#' @keywords internal
+parameterListsToStringArray <- function (parameterLists) 
+{
+  if(!is.null(parameterLists) && length(parameterLists)>0)
+  {
+    objlist <- vector("list",length(parameterLists));
+    for(i in seq_along(parameterLists))
+    {
+      objlist[[i]] = parameterListToStringArray(parameterLists[[i]])
+    }
+    rJava::.jcast(rJava::.jarray(objlist),"[[[Ljava/lang/Object;")
+  }
+  else
+  {
+    rJava::.jcast(nullObject,"[[[Ljava/lang/Object;")
+  }
+
+}
 
 #' Converts the varmap to a list
 #' 
