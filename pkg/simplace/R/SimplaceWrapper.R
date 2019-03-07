@@ -414,10 +414,6 @@ parameterListToStringArray <- function (parameterList)
   {
     objlist <- vector("list",length(parameterList));    # creates an empty list
     names <- names(parameterList)    # get the keys
-    
-    wr <- getOption("warn") # turn off warnings as jarray gives a warning
-    options(warn = -1)
-    
     for(i in 1:length(parameterList))
     {
       name <-  rJava::.jnew("java/lang/String",names[[i]])   # key
@@ -426,10 +422,8 @@ parameterListToStringArray <- function (parameterList)
       } else {
         value <- rJava::.jarray(parameterList[[i]])
       }  
-      objlist[i] <-rJava::.jarray(c(name, value))   # add array entry = {key, value}
+      objlist[[i]] <-rJava::.jarray(c(name, value))   # add array entry = {key, value}
     }
-    options(warn=wr)
-    
     rJava::.jcast(rJava::.jarray(objlist),"[[Ljava/lang/Object;") # convert list to java array and cast it to Object[][]
   }
   else

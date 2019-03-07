@@ -1,3 +1,6 @@
+Version 4.2.4
+* Bugfix to avoid deprecation warning
+
 Version 4.2.3
 * Possibilty to perform simulation step on all/specific queued simulations 
 * Data and ProjectDir defaults to WorkDir, not to simplace server
@@ -52,8 +55,8 @@ Version 0.91
 
 Version 0.90
 * Compatible with Simplace V3.0
-* initSimplace optionally accepts a list of additional claspaths
-* initSimplace optionalle accepts parameters that are passed to the java virtual machine
+* initSimplace optionally accepts a list of additional classpaths
+* initSimplace optionally accepts parameters that are passed to the java virtual machine
 * setLogLevel to control the verbosity of the logging
 
 Version 0.85
@@ -69,27 +72,22 @@ Version 0.6
 * Compatible with Simplace 2.0
 
 Version 0.5
-
 * Updated documentation
 * Bugfix: Parsing Boolean values from the result
 
 
 Version 0.4
-
 * Updated vignette
 
 
 Version 0.3
-
 * Updated documentation
 * Returns the id of the created simulation
 
 
 Version 0.2
-
 * Version submitted initially to R-Forge
 
 
 Version 0.1
-
 * Just a proof of concept
