@@ -1,6 +1,6 @@
 Package: simplace
 Type: Package
-Title: Interface to use the modelling framework SIMPLACE
+Title: Interface to Use the Modelling Framework SIMPLACE
 Version: 4.3.0
 Date: 2020-10-30
 Encoding: UTF-8
@@ -12,7 +12,7 @@ License: GPL-2
 SystemRequirements: Java (>= 8.0)
 Imports:
     rJava (>= 0.9-6)
-LazyLoad: yes
+LazyLoad: no
 VignetteBuilder: knitr
 Suggests:
     knitr
