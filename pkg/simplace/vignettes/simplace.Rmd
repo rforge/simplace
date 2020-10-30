@@ -1,15 +1,10 @@
 ---
 title: "Interface to use Simplace from R"
 author: "Gunther Krauss"
-date: "`r Sys.setlocale('LC_ALL','English');format(Sys.Date(),format='%B %d, %Y')`"
+date: "`r format(Sys.Date(),format='%B %d, %Y')`"
 output: 
-  pdf_document: 
+  rmarkdown::pdf_document: 
     number_sections: yes
-  rmarkdown::html_vignette:
-    number_sections: yes
-    fig-width: 7
-    fig-height: 6
-  
 
 vignette: >
   %\VignetteIndexEntry{Simplace}
@@ -19,8 +14,8 @@ vignette: >
 ---
 
 # Introduction
-This package provides methods to interact with the modelling framework <span style="font-variant:small-caps;">Simplace</span>^[
-**S**<span style="font-variant:small-caps;">cientific</span> 
+This package provides methods to interact with the modelling framework <span style="font-variant:small-caps;">Simplace
+</span>^[**S**<span style="font-variant:small-caps;">cientific</span> 
 **I**<span style="font-variant:small-caps;">mpact assessment and</span> 
 **M**<span style="font-variant:small-caps;">odelling</span>
 **PL**<span style="font-variant:small-caps;">atform for</span> 
@@ -45,9 +40,9 @@ A brief guide to install <span style="font-variant:small-caps;">Simplace</span>:
 - Unpack the zip archive to your disk. You have to unpack the whole directory `SIMPLACE` and the directory must not be renamed.
 - Install the `simplace` package in R:  
 
-``` {r eval=FALSE}
-install.packages('simplace', 
-   repos=c('http://r-forge.r-project.org','http://cran.r-project.org'))
+``` 
+install.packages('simplace',  
+  repos=c('http://r-forge.r-project.org','http://cran.r-project.org'))
 ```
 
 
@@ -76,14 +71,15 @@ The usage of <span style="font-variant:small-caps;">Simplace</span> in R follows
 
 ## Run the simulation
 
-```{r running, results='hide'}
+```{r running, results='hide', eval=FALSE}
 library(simplace)
-SimplaceInstallationDir <- findSimplaceInstallations()
+SimplaceInstallationDir <- "D:/Java/simplace/"
+SimplaceWorkDir <- paste(SimplaceInstallationDir,"simplace_run/simulation/",sep="")
+SimplaceOutputDir <-  paste(SimplaceInstallationDir,"simplace_run/output/",sep="")
 
-Solution <- paste(SimplaceInstallationDir,
-        "simplace_run/simulation/gk/solution/complete/Complete.sol.xml",sep="")
+Solution <- paste(SimplaceWorkDir,"gk/solution/complete/Complete.sol.xml",sep="")
 
-simplace <- initSimplace(SimplaceInstallationDir)
+simplace <- initSimplace(SimplaceInstallationDir,SimplaceWorkDir,SimplaceOutputDir)
 
 openProject(simplace, Solution)
 
@@ -104,9 +100,9 @@ After specifying the directories and the solution, the framework is initialized 
 
 ## Get the result and plot it
 
-```{r plotting, fig.height=5, fig.width=6}
+```{r plotting, fig.height=5, fig.width=6, eval=FALSE}
 resf <- resultToDataframe(result)
-
+ 
 dates <- 300:730
 weights <- resf[dates,
     c("TOP_LINE_Roots","TOP_LINE_Leaves","TOP_LINE_Stems","TOP_LINE_StorageOrgans")]
@@ -123,7 +119,7 @@ The result is converted to a dataframe. Interesting variables are extracted and 
 ## Get arrays and plot them as contour plot
 
 
-```{r contourplot, fig.height=5, fig.width=6}
+```{r contourplot, fig.height=5, fig.width=6, eval=FALSE}
 resultlistexp <- resultToList(result,expand=TRUE)
 water <- resultlistexp$BOTTOM_ARRAY_VolumetricWaterContent
 wmat <- do.call(rbind,water)
