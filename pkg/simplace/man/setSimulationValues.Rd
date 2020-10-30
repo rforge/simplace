@@ -4,8 +4,7 @@
 \alias{setSimulationValues}
 \title{Changes values of the current simulation}
 \usage{
-setSimulationValues(simplace, parameterList = NULL,
-  simulationNumber = 1)
+setSimulationValues(simplace, parameterList = NULL, simulationNumber = 1)
 }
 \arguments{
 \item{simplace}{handle to the SimplaceWrapper object returned by \code{\link{initSimplace}}}

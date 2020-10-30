@@ -4,8 +4,7 @@
 \alias{stepAllSimulations}
 \title{Run all simulations in queue stepwise}
 \usage{
-stepAllSimulations(simplace, count = 1, filter = NULL,
-  parameterLists = NULL)
+stepAllSimulations(simplace, count = 1, filter = NULL, parameterLists = NULL)
 }
 \arguments{
 \item{simplace}{handle to the SimplaceWrapper object returned by \code{\link{initSimplace}}}

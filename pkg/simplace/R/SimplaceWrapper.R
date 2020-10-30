@@ -73,7 +73,14 @@ nullString <- rJava::.jnull(class="java/lang/String") # java null string
 #' @param force.init (re)initialize a running JVM, see \code{\link{.jinit}}
 #' @return handle to the SimplaceWrapper object
 #' @export
-initSimplace <- function(InstallationDir,WorkDir,OutputDir, ProjectsDir = nullString, DataDir = nullString, additionalClasspaths = c(),javaparameters = getOption("java.parameters"), force.init=TRUE)
+initSimplace <- function(InstallationDir,
+                         WorkDir = paste0(InstallationDir,"simplace_run/simulation/"),
+                         OutputDir = paste0(InstallationDir,"simplace_run/output/"),
+                         ProjectsDir = nullString, 
+                         DataDir = nullString, 
+                         additionalClasspaths = c(),
+                         javaparameters = getOption("java.parameters"), 
+                         force.init=TRUE)
 {
   
   rJava::.jinit(parameters=javaparameters, force.init=force.init) # inits java

@@ -4,10 +4,16 @@
 \alias{initSimplace}
 \title{Initialisation of Framework}
 \usage{
-initSimplace(InstallationDir, WorkDir, OutputDir,
-  ProjectsDir = nullString, DataDir = nullString,
+initSimplace(
+  InstallationDir,
+  WorkDir = paste0(InstallationDir, "simplace_run/simulation/"),
+  OutputDir = paste0(InstallationDir, "simplace_run/output/"),
+  ProjectsDir = nullString,
+  DataDir = nullString,
   additionalClasspaths = c(),
-  javaparameters = getOption("java.parameters"), force.init = TRUE)
+  javaparameters = getOption("java.parameters"),
+  force.init = TRUE
+)
 }
 \arguments{
 \item{InstallationDir}{directory where simplace_core, simplace_modules and simplace_run are located}

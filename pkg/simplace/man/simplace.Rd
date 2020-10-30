@@ -3,7 +3,6 @@
 \docType{package}
 \name{simplace}
 \alias{simplace}
-\alias{simplace-package}
 \title{simplace: Interface to use the modelling framework SIMPLACE}
 \description{
 Interface to interact with the modelling framework SIMPLACE and to

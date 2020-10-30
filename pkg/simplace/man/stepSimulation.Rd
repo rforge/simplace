@@ -4,8 +4,13 @@
 \alias{stepSimulation}
 \title{Run simulation stepwise}
 \usage{
-stepSimulation(simplace, count = 1, filter = NULL,
-  parameterList = NULL, simulationNumber = 1)
+stepSimulation(
+  simplace,
+  count = 1,
+  filter = NULL,
+  parameterList = NULL,
+  simulationNumber = 1
+)
 }
 \arguments{
 \item{simplace}{handle to the SimplaceWrapper object returned by \code{\link{initSimplace}}}

@@ -1,3 +1,8 @@
+Version 4.3.0
+* Compatible with Simplace 4.3
+* WorkDir and OutputDir are now optional parameters
+* Added function to autodetect Simplace installation
+
 Version 4.2.4
 * Bugfix to avoid deprecation warning
 
