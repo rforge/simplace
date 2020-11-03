@@ -11,8 +11,8 @@ Description: Interface to interact with the modelling framework SIMPLACE and to
 License: GPL-2
 SystemRequirements: Java (>= 8.0)
 Imports:
-    rJava (>= 0.9-6)
-LazyLoad: no
+    rJava (>= 0.9-13)
+LazyLoad: yes
 VignetteBuilder: knitr
 Suggests:
     knitr
