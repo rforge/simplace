@@ -40,9 +40,9 @@ A brief guide to install <span style="font-variant:small-caps;">Simplace</span>:
 - Unpack the zip archive to your disk. You have to unpack the whole directory `SIMPLACE` and the directory must not be renamed.
 - Install the `simplace` package in R:  
 
-``` 
-install.packages('simplace',  
-  repos=c('http://r-forge.r-project.org','http://cran.r-project.org'))
+``` {r eval=FALSE}
+install.packages('simplace', 
+   repos=c('http://r-forge.r-project.org','http://cran.r-project.org'))
 ```
 
 
@@ -64,8 +64,7 @@ The usage of <span style="font-variant:small-caps;">Simplace</span> in R follows
 - Package `rJava` should be installed automatically with `simplace`. If not, install it manually:  
 `install.packages('rJava')`
 - Architecture of R and Java have to match. If you are using 64-bit Java, you have to use 64-bit R.
-- If you want to use the development version instead of the console mode, make sure that the projects `simplace`, `lap`, `simplacerun` and `lapclient` are in a common directory and set the installation dir to this directory.
-
+- If you want to use the development version instead of the console mode, make sure that the projects `simplace_core`, `simplace_modules` and optionally `simplace_run`  are in a common directory and set the installation dir to this directory.
 
 # Example
 
@@ -73,13 +72,12 @@ The usage of <span style="font-variant:small-caps;">Simplace</span> in R follows
 
 ```{r running, results='hide', eval=FALSE}
 library(simplace)
-SimplaceInstallationDir <- "D:/Java/simplace/"
-SimplaceWorkDir <- paste(SimplaceInstallationDir,"simplace_run/simulation/",sep="")
-SimplaceOutputDir <-  paste(SimplaceInstallationDir,"simplace_run/output/",sep="")
+SimplaceInstallationDir <- findFirstSimplaceInstallation()
 
-Solution <- paste(SimplaceWorkDir,"gk/solution/complete/Complete.sol.xml",sep="")
+Solution <- paste(SimplaceInstallationDir,
+        "simplace_run/simulation/gk/solution/complete/Complete.sol.xml",sep="")
 
-simplace <- initSimplace(SimplaceInstallationDir,SimplaceWorkDir,SimplaceOutputDir)
+simplace <- initSimplace(SimplaceInstallationDir)
 
 openProject(simplace, Solution)
 
